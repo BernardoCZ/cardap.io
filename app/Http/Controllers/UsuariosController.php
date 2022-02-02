@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Storage;
 
 class UsuariosController extends Controller
 {
@@ -20,11 +21,10 @@ class UsuariosController extends Controller
 
     public function insert(Request $form)
     {
-
         $form->validate([
             'username' => ['required', 'min:3', 'max:20'],
             'type' => ['required', 'in:cliente,empresa'],
-            'email' => ['required', 'email', 'max:100'],
+            'email' => ['required', 'email', 'max:100', 'unique:usuarios'],
             'password' => ['required','confirmed', 'min:8', 'max:20'],
             'password_confirmation' => ['required']
         ]);
@@ -52,7 +52,7 @@ class UsuariosController extends Controller
         {
             $credenciais = $form->validate([
                 'email' => ['required'],
-                'password' => ['required'],
+                'password' => ['required', 'min:8', 'max:20'],
             ]);
 
             $lembrado = false;

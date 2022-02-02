@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EstabelecimentosController;
 use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\ImagensController;
@@ -29,3 +30,15 @@ Route::get('/login', [UsuariosController::class, 'login'])->name('login');
 Route::post('/login', [UsuariosController::class, 'login']);
 
 Route::get('/logout', [UsuariosController::class, 'logout'])->name('logout');
+
+Route::prefix('/estabelecimentos')->group(function() {
+
+    Route::get('/', [EstabelecimentosController::class, 'index'])
+    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos');
+
+    Route::get('/inserir', [EstabelecimentosController::class, 'create'])
+    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.inserir');
+    Route::post('/inserir', [EstabelecimentosController::class, 'insert'])
+    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.gravar');
+
+});

@@ -6,25 +6,16 @@
     <form method="post" action="{{ route('login') }}">
         @csrf
 
-        <a href="{{ route('home') }}" class="h1 mb-4 text-white text-logo text-decoration-none">Cardap.io</a>
-        <h2 class="h3 mt-2 mb-3 fw-normal text-white">Faça login na sua conta</h1>
-
         <div class="form-floating">
-            <input type="email" class="form-control first_input" id="email" placeholder="Email" name="email">
+            <input type="email" class="form-control first_input" id="email" placeholder="Email" name="email" maxlength="100" required>
             <label for="email">Endereço de email</label>
         </div>
 
         <div class="form-floating">
-            <input type="password" class="form-control middle_input" id="password" placeholder="Senha" name="password">
+            <input type="password" class="form-control middle_input" id="password" placeholder="Senha" name="password" minlength="8" maxlength="20" required>
             <label for="password">Senha</label>
         </div>
 
-        @if (session('erro'))
-        
-        <!-- Erro -->
-        <div class="alert alert-danger">{{ session('erro') }}</div>
-
-        @endif
 
         <div class="alert alert-light last-input" style="border: 1px solid #ced4da; color: #212529">
             <div class="checkbox">
@@ -33,6 +24,13 @@
                 </label>
             </div>
         </div>
+
+        @if (session('erro'))
+        
+        <!-- Erro -->
+        <div class="alert alert-danger">{{ session('erro') }}</div>
+
+        @endif
 
         <button class="w-100 btn btn-lg btn-light" type="submit">Entrar</button>
 

@@ -57,7 +57,7 @@ return [
         'string' => 'The :attribute must be greater than or equal :value characters.',
         'array' => 'The :attribute must have :value items or more.',
     ],
-    'image' => 'The :attribute must be an image.',
+    'image' => ':attribute deve ser uma imagem.',
     'in' => ':attribute selecionado não é válido.',
     'in_array' => 'The :attribute field does not exist in :other.',
     'integer' => 'The :attribute must be an integer.',
@@ -118,9 +118,9 @@ return [
     'starts_with' => 'The :attribute must start with one of the following: :values.',
     'string' => 'The :attribute must be a string.',
     'timezone' => 'The :attribute must be a valid timezone.',
-    'unique' => 'The :attribute has already been taken.',
+    'unique' => ':attribute já utilizado.',
     'uploaded' => 'The :attribute failed to upload.',
-    'url' => 'The :attribute must be a valid URL.',
+    'url' => ':attribute deve ser uma URL válida.',
     'uuid' => 'The :attribute must be a valid UUID.',
 
     /*
@@ -156,7 +156,22 @@ return [
         'email' => 'Endereço de email',
         'type' => 'Tipo de conta',
         'password' => 'Senha',
-        'password_confirmation' => 'Confirmar senha'
+        'password_confirmation' => 'Confirmar senha',
+        'nome' => 'Nome',
+        'tipo' => 'Tipo de estabelecimento',
+        'descricao' => 'Descrição do estabelecimento',
+        'endereco' => 'Endereço comercial',
+        'telefone' => 'Telefone',
+        'whatsapp' => 'Whatsapp',
+        'site' => 'Site oficial',
+        'facebook' => 'Facebook',
+        'instagram' => 'Instagram',
+        'linkedin' => 'Linkedin',
+        'messenger' => 'Messenger',
+        'twitter' => 'Twitter',
+        'youtube' => 'Youtube',
+        'logo' => 'Logo do estabelecimento',
+        'cor_tema' => 'Cor tema'
     ],
 
 ];

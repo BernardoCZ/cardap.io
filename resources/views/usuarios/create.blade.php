@@ -6,10 +6,8 @@
     <form method="post" action="{{ route('usuarios.gravar') }}">
 
         @csrf
-        <a href="#" class="h1 mb-4 text-white text-logo text-decoration-none">Cardap.io</a>
-        <h2 class="h3 mb-3 mt-2 fw-normal text-white">Registre-se</h1>
 
-        <select class="form-select" name="type">
+        <select class="form-select mb-3" name="type">
             <option value="cliente">Conta Cliente</option>
             <option value="empresa">Conta Empresarial</option>
         </select>
