@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cardapio;
 use App\Models\Estabelecimento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class EstabelecimentosController extends Controller
 {
     public function index()
     {
-        $estabelecimentos = Estabelecimento::orderBy('id', 'desc')->where('id_usuario', FacadesAuth::user()->id)->get();
+        $estabelecimentos = Estabelecimento::orderBy('nome', 'asc')->where('id_usuario', FacadesAuth::user()->id)->get();
         
         return view('estabelecimentos.index', ['estabelecimentos' => $estabelecimentos]);
     }
@@ -24,24 +27,29 @@ class EstabelecimentosController extends Controller
     public function insert(Request $form)
     {
         $form->validate([
-            'nome' => ['required', 'min:3', 'max:45'],
+            'nome' => ['required', 'min:3', 'max:45', Rule::unique('estabelecimentos')->where(function ($query) {
+                return $query->where('id_usuario', FacadesAuth::user()->id);
+            })],
             'tipo' => ['required', 'min:3', 'max:45'],
-            'descricao' => ['required', 'max: 200'],
+            'descricao' => ['required', 'min:3', 'max: 200'],
             'endereco' => ['max: 255'],
             'telefone' => ['max:20'],
             'whatsapp' => ['max:20'],
             'site' => ['nullable', 'url', 'max:100'],
-            'facebook' => ['max:100'],
-            'instagram' => ['max:100'],
-            'linkedin' => ['max:100'],
-            'messenger' => ['max:100'],
-            'twitter' => ['max:100'],
-            'youtube' => ['max:100'],
+            'facebook' => ['nullable', 'url', 'max:100'],
+            'instagram' => ['nullable', 'url', 'max:100'],
+            'linkedin' => ['nullable', 'url', 'max:100'],
+            'messenger' => ['nullable', 'url', 'max:100'],
+            'twitter' => ['nullable', 'url', 'max:100'],
+            'youtube' => ['nullable', 'url', 'max:100'],
             'logo' => ['nullable','image'],
             'cor_tema' => ['required', 'max:10']
         ]);
-
-        $imgPath = $form->file('logo')->store('', 'imagens');
+        
+        $imgPath = null;
+        if($form->file('logo')){
+            $imgPath = $form->file('logo')->store('', 'imagens');
+        }
         
         $estabelecimento = new Estabelecimento();
 
@@ -64,6 +72,12 @@ class EstabelecimentosController extends Controller
 
         $estabelecimento->save();
 
-        return redirect()->route('estabelecimentos');
+        return true;
+    }
+
+    public function show(Estabelecimento $estabelecimento)
+    {
+        $cardapios = Cardapio::orderBy('id', 'asc')->where('id_estabelecimento', $estabelecimento->id)->get();
+        return view('estabelecimentos.show', ['estabelecimento' => $estabelecimento, 'cardapios' => $cardapios]);
     }
 }

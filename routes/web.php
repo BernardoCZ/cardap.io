@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CardapiosController;
 use App\Http\Controllers\EstabelecimentosController;
 use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\UsuariosController;
@@ -34,11 +35,16 @@ Route::get('/logout', [UsuariosController::class, 'logout'])->name('logout');
 Route::prefix('/estabelecimentos')->group(function() {
 
     Route::get('/', [EstabelecimentosController::class, 'index'])
-    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos');
+        ->middleware(['auth', 'can:empresa'])->name('estabelecimentos');
 
     Route::get('/inserir', [EstabelecimentosController::class, 'create'])
-    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.inserir');
+        ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.inserir');
     Route::post('/inserir', [EstabelecimentosController::class, 'insert'])
-    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.gravar');
+        ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.gravar');
+    Route::get('/{estabelecimento}', [EstabelecimentosController::class, 'show'])->name('estabelecimentos.show');
 
 });
+Route::get('/{id_estabelecimento}/cardapio/inserir', [CardapiosController::class, 'create'])
+    ->middleware(['auth', 'can:empresa'])->name('cardapios.inserir');
+Route::post('/cardapio/inserir', [CardapiosController::class, 'insert'])
+    ->middleware(['auth', 'can:empresa'])->name('cardapios.gravar');

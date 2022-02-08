@@ -9,9 +9,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="shortcut icon" type="imagex/png" href="../font/icon.ico">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
         @font-face {
             font-family: Logo Font;
-            src: url('font/nautilus-pompilius.regular.otf');
+            src: url('../font/nautilus-pompilius.regular.otf');
+        }
+        *{
+        font-family: 'Raleway', sans-serif;
         }
         html, body {
             height: 100%;
