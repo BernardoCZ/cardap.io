@@ -19,10 +19,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 
-Route::get('/', function ()
-{
-    return view('templates.base', ['pagina' => 'home']);
-})->name('home');
+Route::get('/', [EstabelecimentosController::class, 'search'])->name('home');
+Route::get('/buscar', [EstabelecimentosController::class, 'search'])->name('buscar');
 
 Route::get('/cadastrar', [UsuariosController::class, 'create'])->name('usuarios.inserir');
 Route::post('/cadastrar', [UsuariosController::class, 'insert'])->name('usuarios.gravar');

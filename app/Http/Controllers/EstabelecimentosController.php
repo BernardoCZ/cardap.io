@@ -84,4 +84,44 @@ class EstabelecimentosController extends Controller
         }
         return view('estabelecimentos.show', ['estabelecimento' => $estabelecimento, 'cardapios' => $cardapios]);
     }
+
+    public function search() {
+
+        if (isset($_GET['campo'])) {
+            $campo = $_GET['campo'];
+        }
+        else {
+            $campo = 'nome';
+        }
+        if (isset($_GET['ordem'])) {
+            $ordem = $_GET['ordem'];
+        }
+        else {
+            $ordem = 'asc';
+        }
+        $value = '';
+        if (isset($_GET) && isset($_GET['val'])) {
+            $value = trim($_GET['val']);
+            if ($campo == 'data') {
+                $campo = 'id';
+            }
+            else if ($campo == 'tipo') {
+                $campo = 'tipo';
+            }
+            else {
+                $campo = 'nome';
+            }
+            if ($ordem != 'desc') {
+                $ordem = 'asc';
+            }
+            $estabelecimentos = Estabelecimento::orderBy($campo, $ordem)->take(50)
+                ->where('nome', 'like', '%'.$value.'%')->orWhere('tipo', 'like', '%'.$value.'%')
+                ->orWhere('descricao', 'like', '%'.$value.'%')->get();
+        }
+        else {
+            $estabelecimentos = false;
+        }
+        
+        return view('estabelecimentos.search', ['estabelecimentos' => $estabelecimentos, 'val' => $value, 'campo' => $campo, 'ordem' => $ordem]);
+    }
 }

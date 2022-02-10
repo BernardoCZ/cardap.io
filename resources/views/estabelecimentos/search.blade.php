@@ -2,20 +2,35 @@
 @section('title', 'Estabelecimentos')
 
 @section('content')
-<div class="d-flex rounded shadow-sm bg-tomato text-white my-3">
-    <div class="d-flex align-items-center p-3" style="margin-right: auto;">
-        <img src="@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif" alt="Usuário" height="32" class="rounded-circle me-3">
-        <div class="lh-1">
-            <h6 class="h6 mb-0 lh-1">{{ Auth::User()->username }}</h6>
-            <small>{{ ucfirst(Auth::User()->type) }}</small>
+<div class="container my-4 bg-light border rounded shadow">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-6 p-3" style="min-width: 250px">
+            <div class="form-floating">
+                <select class="form-select" id="ordenar-campo" onchange="buscar()" @if(isset($campo)) value="{{ $campo }}" @endif>
+                    <option value="nome">Nome</option>
+                    <option value="data">Data de criação</option>
+                    <option value="tipo">Tipo</option>
+                </select>
+                <label for="ordenar-campo">Ordenar por</label>
+            </div>
+        </div>
+        <div class="col-4 p-3 d-flex align-items-center" style="min-width: 250px">
+            <div class="form-check pe-3">
+                <input class="form-check-input" type="radio" name="ordenar-direcao" value="asc" @if(isset($ordem) && $ordem != 'desc') checked @endif onchange="buscar()">
+                <label class="form-check-label" for="ordenar-direcao">Crescente</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ordenar-direcao" value="desc" onchange="buscar()" @if(isset($ordem) && $ordem == 'desc') checked @endif>
+                <label class="form-check-label" for="ordenar-direcao">Decrescente</label>
+            </div>
         </div>
     </div>
-    <div class="d-flex align-items-center p-3">
-        <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-estabelecimento"><i class="bi bi-plus-lg"></i> Novo</button>
-    </div>
+
 </div>
-@if (count($estabelecimentos) == 0)
-    <div class="alert alert-secondary text-center">Você ainda não possui nenhum estabelecimento.</div>
+@if ($estabelecimentos == false)
+    <div class="alert alert-secondary text-center">Busque por estabelecimentos.</div>
+@elseif (count($estabelecimentos) == 0)
+    <div class="alert alert-secondary text-center">Nenhum resultado foi encontrado.</div>
 @else
     <div class="row mb-2" data-masonry='{"percentPosition": true }'>
 
@@ -64,57 +79,15 @@
         @endforeach
     </div>
 @endif
-<div class="modal fade" id="form-modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable modal-fullscreen-lg-down">
-  </div>
-</div>
+
 @endsection
 
 @push('scripts')
 <script>
-$(document).ready(function(){
-
-    $('#novo-estabelecimento').click(function() {
-   
-        $.ajax({
-            url: '{{ route("estabelecimentos.inserir") }}',
-            type: 'get',
-            success: function(response){
-                $('.modal-dialog').html(response);
-                $('#form-modal').modal('show');
-
-                $('#criar-estabelecimento-form').on("submit", function(e){
-                    e.preventDefault();
-                    var action = $(this).attr('action');
-
-                    $.ajax({
-                        url: action,
-                        method: $(this).attr('method'),
-                        data: new FormData(this),
-                        processData: false,
-                        dataType: 'json',
-                        contentType: false,
-                        beforeSend: function() {
-                            $(document).find('.text-danger').text('');
-                            $(document).find('.border-danger').removeClass('is-invalid');
-                        },
-                        success: function() {
-                            location.reload();
-                        },
-                        error: function(err) {
-                            if (err.status == 422) {
-                                $.each(err.responseJSON.errors, function (i, error) {
-                                    $('.'+i+'_error').text(error[0]);
-                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
-                                });
-                            }
-                        }
-                    });
-                })
-            }
-        });
-    });
-});
-
+    function buscar() {
+        if ($('#buscar').val()) {
+            location.href = '{{ route('buscar') }}' + '?val=' + $('#buscar').val() + '&campo=' + $('#ordenar-campo').val() + '&ordem=' + $('input[name="ordenar-direcao"]:checked').val();
+        }
+    };
 </script>
 @endpush

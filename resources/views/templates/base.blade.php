@@ -18,13 +18,13 @@
   </div>
   <nav class="navbar navbar-expand-lg navbar-dark bg-tomato">
     <div class="container-fluid">
-      <a class="text-white text-logo p-2 h2 mb-0 text-decoration-none" href="#">Cardap.io</a>
+      <a class="text-white text-logo p-2 h2 mb-0 text-decoration-none" href="{{ route('home') }}">Cardap.io</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form class="d-flex w-75 m-auto" method="get" action="#">
-          <input class="form-control me-2" type="search" placeholder="Buscar estabelecimento..." aria-label="Buscar estabelecimento">
+        <form class="d-flex w-75 m-auto" method="get" action="{{route('buscar')}}" id="form-buscar">
+          <input class="form-control me-2" type="search" placeholder="Buscar estabelecimento..." id="buscar" @if(isset($val)) value="{{ $val }}" @endif>
         </form>
         <div class="text-end">          
             @if (Auth::user())
@@ -70,6 +70,18 @@
                 document.querySelector("body").style.visibility = "visible";
             }
         };
+      </script>
+      <script src="{{asset('js/preview.js')}}"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+      <script>
+      $(document).ready(function(){
+        $('#form-buscar').on("submit", function(e){
+            e.preventDefault();
+            if ($('#buscar').val()) {
+              location.href = '{{ route('buscar') }}' + '?val=' + $('#buscar').val() + '&campo=nome&ordem=asc';
+            }
+        });
+      });
       </script>
       @stack('scripts')
 </body>

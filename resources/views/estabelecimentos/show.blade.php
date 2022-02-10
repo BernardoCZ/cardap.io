@@ -17,7 +17,7 @@
                 @if (!$estabelecimento->logo)
                     <title>Logo</title>
                     <rect width="100%" height="100%" fill="#55595c"></rect>
-                    <text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">{{ $estabelecimento->nome }}</text>
+                    <text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Sem logo</text>
                 @endif
             </svg>
         </div>
@@ -111,7 +111,7 @@
             </div>
         </div>
     </div>
-    @if (Auth::user()->id == $estabelecimento->id_usuario)
+    @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
     <div class="row mt-3">
         <div class="col">
             <div class="d-flex rounded shadow-sm bg-tomato text-white my-3">
@@ -142,16 +142,16 @@
   		        $blue_produtos = hexdec(substr($cor_produtos,4,2));
             @endphp
 
-            @if (Auth::user()->id == $estabelecimento->id_usuario || $cardapio->visivel)
+            @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario || $cardapio->visivel)
             <div class="row">
                 <div class="col">
                     <div class="p-3 mb-3 rounded d-flex shadow-lg cardapio-titulo-div"
                         style="--red: {{ $red_tema }}; --green: {{ $green_tema }}; --blue: {{ $blue_tema }};">
-                        @if (Auth::user()->id == $estabelecimento->id_usuario && $cardapio->visivel)
+                        @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario && $cardapio->visivel)
                         <div class="d-flex align-items-center ps-3">
                             <span class="fs-4"><i class="bi bi-eye"></i></span>
                         </div>
-                        @elseif(Auth::user()->id == $estabelecimento->id_usuario && !$cardapio->visivel)
+                        @elseif(isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario && !$cardapio->visivel)
                         <div class="d-flex align-items-center ps-3">
                             <span class="fs-4"><i class="bi bi-eye-slash"></i></span>
                         </div>
@@ -159,7 +159,7 @@
                         <div class="m-auto reticencias">
                             <h2 class="h4 cardapio-titulo mb-0 reticencias">{{$cardapio->nome}}</h2>
                         </div>
-                        @if (Auth::user()->id == $estabelecimento->id_usuario)
+                        @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
                         <div class="d-flex align-items-center ps-3">
                             <button class="btn btn-success novo-produto" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}"><i class="bi bi-clipboard-plus"></i></button>
                         </div>
@@ -221,8 +221,6 @@
 @endsection
 
 @push('scripts')
-<script src="{{asset('js/preview.js')}}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function(){
 

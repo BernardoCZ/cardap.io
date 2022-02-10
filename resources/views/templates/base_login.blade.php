@@ -85,7 +85,7 @@
     <main class="form-signin">
 
         <a href="{{ route('home') }}" class="h1 mb-4 text-white text-logo text-decoration-none">Cardap.io</a>
-        <h2 class="h3 mt-2 mb-3 fw-normal text-white">Faça login na sua conta</h1>
+        <h2 class="h3 mt-2 mb-3 fw-normal text-white">@yield('subtitle')</h1>
         <!-- Conteúdo -->
         @yield('content')
 

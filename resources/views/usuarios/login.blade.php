@@ -1,5 +1,6 @@
 @extends('templates.base_login')
 @section('title', 'Fazer Login')
+@section('subtitle', 'Faça login na sua conta')
 
 @section('content')
 
