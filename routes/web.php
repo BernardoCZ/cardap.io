@@ -44,7 +44,13 @@ Route::prefix('/estabelecimentos')->group(function() {
     Route::get('/{estabelecimento}', [EstabelecimentosController::class, 'show'])->name('estabelecimentos.show');
 
 });
+
 Route::get('/{id_estabelecimento}/cardapio/inserir', [CardapiosController::class, 'create'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.inserir');
 Route::post('/cardapio/inserir', [CardapiosController::class, 'insert'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.gravar');
+
+Route::get('/produto/inserir', [ProdutosController::class, 'create'])
+    ->middleware(['auth', 'can:empresa'])->name('produtos.inserir');
+Route::post('/produto/inserir', [ProdutosController::class, 'insert'])
+    ->middleware(['auth', 'can:empresa'])->name('produtos.gravar');

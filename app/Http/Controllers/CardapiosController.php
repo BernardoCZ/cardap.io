@@ -20,7 +20,7 @@ class CardapiosController extends Controller
     public function insert(Request $form)
     {
         try {
-            $id_usuario = Estabelecimento::orderBy('nome', 'asc')->where('id', $form->id_estabelecimento)->value('id_usuario');
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $form->id_estabelecimento)->value('id_usuario');
             if ($id_usuario != FacadesAuth::user()->id) {
                 throw new Exception();
             }

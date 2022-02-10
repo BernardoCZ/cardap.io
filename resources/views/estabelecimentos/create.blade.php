@@ -29,7 +29,7 @@
 
                 <div class="form-floating mb-3">
                     <textarea class="form-control" placeholder="Descrição do estabelecimento" id="descricao" name="descricao" maxlength="200" onchange="changeDesc()"></textarea>
-                    <label for="descricao">Descrição do estabelecimento*</label>
+                    <label for="descricao">Descrição do estabelecimento</label>
                     <div class="form-text text-end me-1 text-danger descricao_error"></div>
                 </div>
 
@@ -120,8 +120,8 @@
                         <div class="form-text text-end me-1 text-danger logo_error"></div>
                     </div>
                     <div class="col-2 mb-3" style="min-width: 250px">
-                        <label for="cor_tema" class="form-label">Cor tema*</label>
-                        <input type="color" class="form-control form-control-color" id="cor_tema" name="cor_tema" title="Escolha uma cor" value="#ffffff" onchange="changeCardColor()">
+                        <label for="cor_tema" class="form-label">Cor tema</label>
+                        <input type="color" class="form-control form-control-color" id="cor_tema" name="cor_tema" title="Escolha uma cor" value="#ffffff" onchange="changeCardColor('#cor_tema')">
                         <div class="form-text text-end me-1 text-danger cor_tema_error"></div>
                     </div>
                 </div>

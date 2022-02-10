@@ -31,7 +31,7 @@ function changeCardapioName() {
         nome_preview.innerHTML = nome;
     }
     else{
-        nome_preview.innerHTML = 'Nome do estabelecimento';
+        nome_preview.innerHTML = 'Nome do cardápio';
     }
 }
 function changeType() {
@@ -63,6 +63,65 @@ function changeLogo(event) {
     }
     else{
         preview.innerHTML = '<title>Logo</title><rect width="100%" height="100%" fill="#55595c"></rect><text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Logo</text>';
+        preview.style.backgroundImage = 'none';
+    }
+}
+function changePreco() {
+    var preco = document.querySelector('#preco').value;
+    var moeda = document.querySelector('#moeda').value;
+    var preco_preview = document.querySelector('#preview-produto-preco');
+    if (preco > 9999999999) {
+        preco = 9999999999;
+    }
+    else if (preco < 0) {
+        preco = 0;
+    }
+    if (preco == '') {
+        preco = "Preço";
+    }
+    else {
+        preco = (Math.round(preco * 100) / 100).toFixed(2);
+        document.querySelector('#preco').value = preco;
+    }
+    if (moeda != 'R$' && moeda != 'US$' && moeda != '€' && moeda != '£') {
+        moeda = "R$";
+    }
+    if (preco == 0) {
+        preco_preview.innerHTML = 'Grátis';
+    }
+    else {
+        preco_preview.innerHTML = moeda + ' ' + preco;
+    }
+}
+function changeProdutoName() {
+    var nome = document.querySelector('#nome').value;
+    var nome_preview = document.querySelector('#preview-produto-nome');
+    if (nome != ''){
+        nome_preview.innerHTML = nome;
+    }
+    else{
+        nome_preview.innerHTML = 'Nome do produto';
+    }
+}
+function changeProdutoDesc() {
+    var desc = document.querySelector('#descricao').value;
+    var desc_preview = document.querySelector('#preview-produto-descricao');
+    if (desc != ''){
+        desc_preview.innerHTML = desc;
+    }
+    else{
+        desc_preview.innerHTML = 'Descrição do produto...';
+    }
+}
+function changeFoto(event) {
+    var preview = document.querySelector('#preview-produto-foto');
+    if(event.target.files.length > 0 && event.target.files[0].type.includes('image')){
+        var src = URL.createObjectURL(event.target.files[0]);
+        preview.style.backgroundImage = 'url(' + src + ')';
+        preview.innerHTML = "";
+    }
+    else{
+        preview.innerHTML = '<title>Foto</title><rect width="100%" height="100%" fill="#55595c"></rect><text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Foto</text>';
         preview.style.backgroundImage = 'none';
     }
 }

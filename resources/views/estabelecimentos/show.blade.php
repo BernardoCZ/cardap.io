@@ -136,23 +136,80 @@
                 $red_tema = hexdec(substr($cor_tema,0,2));
   		        $green_tema = hexdec(substr($cor_tema,2,2));
   		        $blue_tema = hexdec(substr($cor_tema,4,2));
-                $cor_produtos = str_replace("#", "", $cardapio->cor_tema);
+                $cor_produtos = str_replace("#", "", $cardapio->cor_produtos);
                 $red_produtos = hexdec(substr($cor_produtos,0,2));
   		        $green_produtos = hexdec(substr($cor_produtos,2,2));
   		        $blue_produtos = hexdec(substr($cor_produtos,4,2));
             @endphp
 
-            @if ($cardapio->visivel || (!$cardapio->visivel && Auth::user()->id == $estabelecimento->id_usuario))
+            @if (Auth::user()->id == $estabelecimento->id_usuario || $cardapio->visivel)
             <div class="row">
                 <div class="col">
                     <div class="p-3 mb-3 rounded d-flex shadow-lg cardapio-titulo-div"
                         style="--red: {{ $red_tema }}; --green: {{ $green_tema }}; --blue: {{ $blue_tema }};">
+                        @if (Auth::user()->id == $estabelecimento->id_usuario && $cardapio->visivel)
+                        <div class="d-flex align-items-center ps-3">
+                            <span class="fs-4"><i class="bi bi-eye"></i></span>
+                        </div>
+                        @elseif(Auth::user()->id == $estabelecimento->id_usuario && !$cardapio->visivel)
+                        <div class="d-flex align-items-center ps-3">
+                            <span class="fs-4"><i class="bi bi-eye-slash"></i></span>
+                        </div>
+                        @endif
                         <div class="m-auto reticencias">
                             <h2 class="h4 cardapio-titulo mb-0 reticencias">{{$cardapio->nome}}</h2>
                         </div>
+                        @if (Auth::user()->id == $estabelecimento->id_usuario)
+                        <div class="d-flex align-items-center ps-3">
+                            <button class="btn btn-success novo-produto" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}"><i class="bi bi-clipboard-plus"></i></button>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
+            @if (count($cardapio->produtos) == 0)
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-secondary text-center mb-5">Este cardápio ainda não possui produtos.</div>
+                </div>
+            </div>
+            @else
+
+            <div class="row mb-2" data-masonry='{"percentPosition": true }'>
+
+                @foreach($cardapio->produtos as $produto)
+
+                    <div class="col-md-6 card-col m-auto">
+                        <div class="card card_busca row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-preview"
+                            style=" --red: {{ $red_produtos }}; --green: {{ $green_produtos }}; --blue: {{ $blue_produtos }};">
+                            <div class="col p-4">
+                                <svg class="bd-placeholder-img card-img-background bg-light rounded shadow" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false"
+                                    @if ($produto->foto) style="background-image: url({{asset('img/' . $produto->foto)}})" @endif>
+                            @if (!$produto->foto)
+                            <title>Foto</title>
+                            <rect width="100%" height="100%" fill="#55595c"></rect>
+                            <text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Sem foto</text>
+                            @endif
+                                </svg>
+                            </div>
+                            <div class="col p-4 d-flex flex-column position-static text-center">
+                                <h3 class="mb-2 reticencias">{{ $produto->nome }}</h3>
+                                <strong class="d-inline-block mb-2 reticencias">
+                                    @if($produto->preco)
+                                        @if($produto->preco == 0)Grátis
+                                        @else{{ $produto->moeda . ' ' . $produto->preco }}
+                                        @endif
+                                    @endif
+                                </strong>
+                                <p class="card-text mb-auto reticencias reticencias-descricao">{{ $produto->descricao }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+            </div>
+
+            @endif
             @endif
         @endforeach
     </div>
@@ -190,7 +247,7 @@ $(document).ready(function(){
                         contentType: false,
                         beforeSend: function() {
                             $(document).find('.text-danger').text('');
-                            $(document).find('.border-danger').removeClass('border-danger');
+                            $(document).find('.border-danger').removeClass('is-invalid');
                         },
                         success: function() {
                             location.reload();
@@ -199,7 +256,50 @@ $(document).ready(function(){
                             if (err.status == 422) {
                                 $.each(err.responseJSON.errors, function (i, error) {
                                     $('.'+i+'_error').text(error[0]);
-                                    $(document).find('[name="'+i+'"]').addClass('border-danger');
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
+                                });
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    });
+
+    $('.novo-produto').click(function() {
+   
+        var id_cardapio = $(this).data('id');
+
+        $.ajax({
+            url: '{{ route("produtos.inserir") }}',
+            type: 'get',
+            data: {id: id_cardapio},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+
+                $('#criar-produto-form').on("submit", function(e){
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: action = $(this).attr('action'),
+                        method: $(this).attr('method'),
+                        data: new FormData(this),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        beforeSend: function() {
+                            $(document).find('.text-danger').text('');
+                            $(document).find('.border-danger').removeClass('is-invalid');
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function(err) {
+                            if (err.status == 422) {
+                                $.each(err.responseJSON.errors, function (i, error) {
+                                    $('.'+i+'_error').text(error[0]);
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
                                 });
                             }
                         }

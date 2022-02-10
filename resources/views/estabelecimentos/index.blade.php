@@ -98,7 +98,7 @@ $(document).ready(function(){
                         contentType: false,
                         beforeSend: function() {
                             $(document).find('.text-danger').text('');
-                            $(document).find('.border-danger').removeClass('border-danger');
+                            $(document).find('.border-danger').removeClass('is-invalid');
                         },
                         success: function() {
                             location.reload();
@@ -107,7 +107,7 @@ $(document).ready(function(){
                             if (err.status == 422) {
                                 $.each(err.responseJSON.errors, function (i, error) {
                                     $('.'+i+'_error').text(error[0]);
-                                    $(document).find('[name="'+i+'"]').addClass('border-danger');
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
                                 });
                             }
                         }

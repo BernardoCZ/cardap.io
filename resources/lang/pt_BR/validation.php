@@ -171,7 +171,11 @@ return [
         'twitter' => 'Link do twitter',
         'youtube' => 'Link do youtube',
         'logo' => 'Logo do estabelecimento',
-        'cor_tema' => 'Cor tema'
+        'cor_tema' => 'Cor tema',
+        'cor_produtos' => 'Cor dos produtos',
+        'foto' => 'Foto do produto',
+        'moeda' => 'Moeda',
+        'preco' => 'Preço'
     ],
 
 ];
