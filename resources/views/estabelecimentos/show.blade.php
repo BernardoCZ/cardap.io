@@ -7,6 +7,9 @@
     $red = hexdec(substr($cor_fundo,0,2));
     $green = hexdec(substr($cor_fundo,2,2));
     $blue = hexdec(substr($cor_fundo,4,2));
+    if ($nota_total) {
+        $nota_total_estrelas = ($nota_total * 100)/5;
+    }
 @endphp
 
     <div class="row mb-4 rounded banner-estabelecimento shadow" style=" --red: {{ $red }}; --green: {{ $green }}; --blue: {{ $blue }};">
@@ -91,20 +94,21 @@
             </p>
             @endif
         </div>
-        <div class="col-md-6" style="font-size: 2rem; font-weight: bold;">
+        <div class="col-md-6" style="font-weight: bold;">
             <div class="row">
                 <div class="col d-flex"> 
-                    <div class="m-auto">
-                        <span style="color: orange;">--</span>
-                        <span class="notas" style="background: linear-gradient(to right, orange 0%, #b7bdc3 0); -webkit-background-clip: text;">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
+                    <div class="m-auto fs-1">
+                        <span style="color: orange;">@if($nota_total || $nota_total == 0){{ $nota_total }}@else--@endif</span>
+                        <span class="notas" style="background: linear-gradient(to right, orange 
+                        @if(isset($nota_total_estrelas)){{ $nota_total_estrelas.'%' }}@else{{'0%'}}@endif, #b7bdc3 0); -webkit-background-clip: text;">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
                         </span>
                         @can('cliente')
-                        <button type="button" class="btn btn-warning text-white">Avaliar</button>
+                        <button type="button" class="btn btn-warning text-white" id="avaliar">Avaliar</button>
                         @endcan
                     </div>
                 </div>
@@ -119,7 +123,7 @@
                     <h3 class="h4 mb-0 lh-1">Cardápios</h6>
                 </div>
                 <div class="d-flex align-items-center p-3">
-                    <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-cardapio"><i class="bi bi-plus-lg"></i> Novo</button>
+                    <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-cardapio" data-bs-toggle="tooltip" data-bs-placement="top" title="Criar cardápio"><i class="bi bi-plus-lg"></i> Novo</button>
                 </div>
             </div>
         </div>
@@ -148,7 +152,7 @@
                     <div class="p-3 mb-3 rounded d-flex shadow-lg cardapio-titulo-div"
                         style="--red: {{ $red_tema }}; --green: {{ $green_tema }}; --blue: {{ $blue_tema }};">
                         @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario && $cardapio->visivel)
-                        <div class="d-flex align-items-center ps-3">
+                        <div class="d-flex align-items-center ps-3 me-3">
                             <span class="fs-4"><i class="bi bi-eye"></i></span>
                         </div>
                         @elseif(isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario && !$cardapio->visivel)
@@ -161,7 +165,7 @@
                         </div>
                         @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
                         <div class="d-flex align-items-center ps-3">
-                            <button class="btn btn-success novo-produto" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}"><i class="bi bi-clipboard-plus"></i></button>
+                            <button class="btn btn-success shadow-sm novo-produto" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Adicionar produto"><i class="bi bi-clipboard-plus"></i></button>
                         </div>
                         @endif
                     </div>
@@ -193,7 +197,7 @@
                                 </svg>
                             </div>
                             <div class="col p-4 d-flex flex-column position-static text-center">
-                                <h3 class="mb-2 reticencias">{{ $produto->nome }}</h3>
+                                <h3 class="mb-2 card-estabelecimento-nome reticencias">{{ $produto->nome }}</h3>
                                 <strong class="d-inline-block mb-2 reticencias">
                                     @if($produto->preco)
                                         @if($produto->preco == 0)Grátis
@@ -201,7 +205,8 @@
                                         @endif
                                     @endif
                                 </strong>
-                                <p class="card-text mb-auto reticencias reticencias-descricao">{{ $produto->descricao }}</p>
+                                <p class="card-text mb-auto card-estabelecimento-descricao reticencias reticencias-descricao">{{ $produto->descricao }}</p>
+                                <button class="btn btn-danger shadow-sm excluir-produto mt-3 m-auto" role="button" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir produto"><i class="bi bi-clipboard-minus"></i></button>
                             </div>
                         </div>
                     </div>
@@ -306,7 +311,103 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('#avaliar').click(function() {
+
+        $.ajax({
+            url: '{{ route("notas.inserir", $estabelecimento->id) }}',
+            type: 'get',
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+
+                $('#criar-nota-form').on("submit", function(e){
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: action = $(this).attr('action'),
+                        method: $(this).attr('method'),
+                        data: new FormData(this),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        beforeSend: function() {
+                            $(document).find('.text-danger').text('');
+                            $(document).find('.border-danger').removeClass('is-invalid');
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function(err) {
+                            if (err.status == 422) {
+                                $.each(err.responseJSON.errors, function (i, error) {
+                                    $('.'+i+'_error').text(error[0]);
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
+                                });
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    });
+
+    $('.excluir-produto').click(function() {
+        
+        var id_produto = $(this).data('id');
+
+        $.ajax({
+            url: '{{ route("produtos.remove") }}',
+            type: 'get',
+            data: {id: id_produto},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+            }
+        });
+    });
 });
 
 </script>
+@endpush
+
+@push('styles')
+<style>
+.rating {
+  --dir: right;
+  --fill: gold;
+  --fillbg: rgba(100, 100, 100, 0.15);
+  --star: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>');
+  --stars: 5;
+  --starsize: 3rem;
+  --symbol: var(--star);
+  --value: 1;
+  --w: calc(var(--stars) * var(--starsize));
+  --x: calc(100% * (var(--value) / var(--stars)));
+  inline-size: var(--w);
+  -webkit-appearance: none;
+}
+.rating::-moz-range-track {
+  background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+  block-size: 100%;
+  mask: repeat left center/var(--starsize) var(--symbol);
+}
+.rating::-webkit-slider-runnable-track {
+  background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+  block-size: 100%;
+  mask: repeat left center/var(--starsize) var(--symbol);
+  -webkit-mask: repeat left center/var(--starsize) var(--symbol);
+}
+.rating::-moz-range-thumb {
+  height: var(--starsize);
+  opacity: 0;
+  width: var(--starsize);
+}
+.rating::-webkit-slider-thumb {
+  height: var(--starsize);
+  opacity: 0;
+  width: var(--starsize);
+  -webkit-appearance: none;
+}
+</style>
 @endpush

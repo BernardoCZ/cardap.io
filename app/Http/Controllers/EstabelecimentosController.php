@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Cardapio;
 use App\Models\Estabelecimento;
+use App\Models\Nota;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Exception;
 
 class EstabelecimentosController extends Controller
 {
@@ -78,11 +80,15 @@ class EstabelecimentosController extends Controller
 
     public function show(Estabelecimento $estabelecimento)
     {
+        $nota_total = Nota::orderBy('id', 'asc')->where('id_estabelecimento', $estabelecimento->id)->pluck('valor')->avg();
+        if ($nota_total) {
+            $nota_total = number_format($nota_total, 1, '.', '');
+        }
         $cardapios = Cardapio::orderBy('id', 'asc')->where('id_estabelecimento', $estabelecimento->id)->get();
         foreach ($cardapios as $cardapio) {
             $cardapio->produtos = Produto::orderBy('id', 'asc')->where('id_cardapio', $cardapio->id)->get();
         }
-        return view('estabelecimentos.show', ['estabelecimento' => $estabelecimento, 'cardapios' => $cardapios]);
+        return view('estabelecimentos.show', ['estabelecimento' => $estabelecimento, 'cardapios' => $cardapios, 'nota_total' => $nota_total]);
     }
 
     public function search() {

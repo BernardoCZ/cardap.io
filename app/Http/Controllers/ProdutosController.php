@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Storage;
 
 class ProdutosController extends Controller
 {
@@ -39,7 +40,7 @@ class ProdutosController extends Controller
         $form->validate([
             'nome' => ['required', 'min:2', 'max:45'],
             'moeda' => ['nullable', 'in:R$,US$,€,£'],
-            'preco' => ['nullable', 'max:13', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'preco' => ['nullable', 'max:13', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
             'descricao' => ['required', 'min:3', 'max: 200'],
             'foto' => ['nullable','image']
         ]);
@@ -62,5 +63,34 @@ class ProdutosController extends Controller
 
         return true;
 
+    }
+    public function remove()
+    {
+        $produto = Produto::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        return view('produtos.remove', ['produto' => $produto]);
+    }
+
+    public function delete(Produto $produto)
+    {
+        try {
+            $id_estabelecimento = Cardapio::orderBy('id', 'asc')->where('id', $produto->id_cardapio)->value('id_estabelecimento');
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $id_estabelecimento)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_produto' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+
+        if ($produto->foto) {
+            $image_path = public_path().'/img/'.$produto->foto;
+            unlink($image_path);
+        }
+        $produto->delete();
+        return redirect()->route('estabelecimentos.show', $id_estabelecimento);
     }
 }

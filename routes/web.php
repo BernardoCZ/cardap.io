@@ -5,6 +5,7 @@ use App\Http\Controllers\EstabelecimentosController;
 use App\Http\Controllers\ProdutosController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\ImagensController;
+use App\Http\Controllers\NotasController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -22,13 +23,16 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::get('/', [EstabelecimentosController::class, 'search'])->name('home');
 Route::get('/buscar', [EstabelecimentosController::class, 'search'])->name('buscar');
 
+
 Route::get('/cadastrar', [UsuariosController::class, 'create'])->name('usuarios.inserir');
 Route::post('/cadastrar', [UsuariosController::class, 'insert'])->name('usuarios.gravar');
+
 
 Route::get('/login', [UsuariosController::class, 'login'])->name('login');
 Route::post('/login', [UsuariosController::class, 'login']);
 
 Route::get('/logout', [UsuariosController::class, 'logout'])->name('logout');
+
 
 Route::prefix('/estabelecimentos')->group(function() {
 
@@ -43,12 +47,25 @@ Route::prefix('/estabelecimentos')->group(function() {
 
 });
 
+
 Route::get('/{id_estabelecimento}/cardapio/inserir', [CardapiosController::class, 'create'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.inserir');
 Route::post('/cardapio/inserir', [CardapiosController::class, 'insert'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.gravar');
 
+
 Route::get('/produto/inserir', [ProdutosController::class, 'create'])
     ->middleware(['auth', 'can:empresa'])->name('produtos.inserir');
 Route::post('/produto/inserir', [ProdutosController::class, 'insert'])
     ->middleware(['auth', 'can:empresa'])->name('produtos.gravar');
+
+Route::get('/produto/apagar', [ProdutosController::class, 'remove'])
+    ->middleware(['auth', 'can:empresa'])->name('produtos.remove');
+Route::delete('/produto/{produto}/apagar', [ProdutosController::class, 'delete'])
+    ->middleware(['auth', 'can:empresa'])->name('produtos.delete');
+
+
+Route::get('/{id_estabelecimento}/nota/inserir', [NotasController::class, 'create'])
+    ->middleware(['auth', 'can:cliente'])->name('notas.inserir');
+Route::post('/nota/inserir', [notasController::class, 'insert'])
+    ->middleware(['auth', 'can:cliente'])->name('notas.gravar');

@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="d-flex align-items-center p-3">
-        <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-estabelecimento"><i class="bi bi-plus-lg"></i> Novo</button>
+        <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-estabelecimento" data-bs-toggle="tooltip" data-bs-placement="top" title="Criar estabelecimento"><i class="bi bi-plus-lg"></i> Novo</button>
     </div>
 </div>
 @if (count($estabelecimentos) == 0)
