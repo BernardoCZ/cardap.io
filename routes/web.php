@@ -53,6 +53,11 @@ Route::get('/{id_estabelecimento}/cardapio/inserir', [CardapiosController::class
 Route::post('/cardapio/inserir', [CardapiosController::class, 'insert'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.gravar');
 
+Route::get('/cardapio/apagar', [CardapiosController::class, 'remove'])
+    ->middleware(['auth', 'can:empresa'])->name('cardapios.remove');
+Route::delete('/cardapio/{cardapio}/apagar', [CardapiosController::class, 'delete'])
+    ->middleware(['auth', 'can:empresa'])->name('cardapios.delete');
+
 
 Route::get('/produto/inserir', [ProdutosController::class, 'create'])
     ->middleware(['auth', 'can:empresa'])->name('produtos.inserir');

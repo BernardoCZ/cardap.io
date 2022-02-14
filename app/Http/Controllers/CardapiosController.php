@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cardapio;
 use App\Models\Estabelecimento;
+use App\Models\Produto;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -56,5 +57,37 @@ class CardapiosController extends Controller
         $cardapio->save();
 
         return true;
+    }
+    public function remove()
+    {
+        $cardapio = Cardapio::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        return view('cardapios.remove', ['cardapio' => $cardapio]);
+    }
+
+    public function delete(Cardapio $cardapio)
+    {
+        try {
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $cardapio->id_estabelecimento)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_cardapio' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+        $produtos = Produto::orderBy('id', 'asc')->where('id_cardapio', $cardapio->id)->get();
+        foreach ($produtos as $produto) {
+            if ($produto->foto) {
+                $image_path = public_path().'/img/'.$produto->foto;
+                unlink($image_path);
+            }
+        }
+        Produto::where('id_cardapio', $cardapio->id)->delete();
+
+        $cardapio->delete();
+        return redirect()->route('estabelecimentos.show', $cardapio->id_estabelecimento);
     }
 }

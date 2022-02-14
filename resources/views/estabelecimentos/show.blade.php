@@ -165,7 +165,8 @@
                         </div>
                         @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
                         <div class="d-flex align-items-center ps-3">
-                            <button class="btn btn-success shadow-sm novo-produto" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Adicionar produto"><i class="bi bi-clipboard-plus"></i></button>
+                            <button class="btn btn-success shadow-sm novo-produto me-2" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Adicionar produto"><i class="bi bi-clipboard-plus"></i></button>
+                            <button class="btn btn-danger shadow-sm excluir-cardapio" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir cardápio"><i class="bi bi-clipboard-x"></i></button>
                         </div>
                         @endif
                     </div>
@@ -360,6 +361,21 @@ $(document).ready(function(){
             url: '{{ route("produtos.remove") }}',
             type: 'get',
             data: {id: id_produto},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+            }
+        });
+    });
+
+    $('.excluir-cardapio').click(function() {
+        
+        var id_cardapio = $(this).data('id');
+
+        $.ajax({
+            url: '{{ route("cardapios.remove") }}',
+            type: 'get',
+            data: {id: id_cardapio},
             success: function(response){
                 $('.modal-dialog').html(response);
                 $('#form-modal').modal('show');
