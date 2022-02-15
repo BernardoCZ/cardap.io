@@ -78,7 +78,7 @@ return [
         'array' => 'The :attribute must not have more than :value items.',
     ],
     'max' => [
-        'numeric' => 'The :attribute must not be greater than :max.',
+        'numeric' => 'O valor de ":attribute" não deve ser maior que :max.',
         'file' => 'The :attribute must not be greater than :max kilobytes.',
         'string' => ':attribute não deve ser maior do que :max caracteres.',
         'array' => 'The :attribute must not have more than :max items.',

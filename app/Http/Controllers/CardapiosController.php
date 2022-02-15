@@ -37,6 +37,7 @@ class CardapiosController extends Controller
             'nome' => ['required', 'min:3', 'max:100'],
             'cor_tema' => ['required', 'max:10'],
             'cor_produtos' => ['required', 'max:10'],
+            'cor_produtos_secundaria' => ['required', 'max:10']
         ]);
 
         $visible = false;
@@ -52,6 +53,7 @@ class CardapiosController extends Controller
         $cardapio->nome = $form->nome;
         $cardapio->cor_tema = $form->cor_tema;
         $cardapio->cor_produtos = $form->cor_produtos;
+        $cardapio->cor_produtos_secundaria = $form->cor_produtos_secundaria;
         $cardapio->visivel = $visible;
 
         $cardapio->save();
@@ -89,5 +91,52 @@ class CardapiosController extends Controller
 
         $cardapio->delete();
         return redirect()->route('estabelecimentos.show', $cardapio->id_estabelecimento);
+    }
+
+    public function edit()
+    {
+        $cardapio = Cardapio::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        return view('cardapios.edit', ['cardapio' => $cardapio]);
+    }
+
+    public function update(Request $form, Cardapio $cardapio)
+    {
+
+        try {
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $cardapio->id_estabelecimento)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_estabelecimento' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+
+        $form->validate([
+            'nome' => ['required', 'min:3', 'max:100'],
+            'cor_tema' => ['required', 'max:10'],
+            'cor_produtos' => ['required', 'max:10'],
+            'cor_produtos_secundaria' => ['required', 'max:10']
+        ]);
+
+        $visible = false;
+            
+        if ($form->visivel == "on")
+        {
+            $visible = true;
+        }
+
+        $cardapio->nome = $form->nome;
+        $cardapio->cor_tema = $form->cor_tema;
+        $cardapio->cor_produtos = $form->cor_produtos;
+        $cardapio->cor_produtos_secundaria = $form->cor_produtos_secundaria;
+        $cardapio->visivel = $visible;
+
+        $cardapio->save();
+
+        return true;
     }
 }

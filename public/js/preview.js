@@ -6,6 +6,14 @@ function changeCardColor(element) {
     card.style.setProperty('--green', color[1]);
     card.style.setProperty('--blue', color[2]);
 }
+function changeCardSecColor(element) {
+    var color = document.querySelector(element).value;
+    color = color.match(/[A-Za-z0-9]{2}/g).map(function(v) { return parseInt(v, 16) });
+    var card = document.querySelector('#preview-produtos-textbox');
+    card.style.setProperty('--red', color[0]);
+    card.style.setProperty('--green', color[1]);
+    card.style.setProperty('--blue', color[2]);
+}
 function changeCardapioColor(element) {
     var color = document.querySelector(element).value;
     color = color.match(/[A-Za-z0-9]{2}/g).map(function(v) { return parseInt(v, 16) });
@@ -114,14 +122,12 @@ function changeProdutoDesc() {
     }
 }
 function changeFoto(event) {
-    var preview = document.querySelector('#preview-produto-foto');
+    var preview = document.querySelector('#preview-img-div');
     if(event.target.files.length > 0 && event.target.files[0].type.includes('image')){
         var src = URL.createObjectURL(event.target.files[0]);
-        preview.style.backgroundImage = 'url(' + src + ')';
-        preview.innerHTML = "";
+        preview.innerHTML = '<img src="'+src+'" class="bd-placeholder-img card-img-background rounded mw-100 mh-100 my-auto">'
     }
     else{
-        preview.innerHTML = '<title>Foto</title><rect width="100%" height="100%" fill="#55595c"></rect><text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Foto</text>';
-        preview.style.backgroundImage = 'none';
+        preview.innerHTML = '<svg class="bd-placeholder-img card-img-background rounded" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Foto</title><rect width="100%" height="100%" fill="#55595c"></rect><text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Sem foto</text></svg>';
     }
 }

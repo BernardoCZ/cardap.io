@@ -19,21 +19,24 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// ROTAS DE BUSCA
 Route::get('/', [EstabelecimentosController::class, 'search'])->name('home');
 Route::get('/buscar', [EstabelecimentosController::class, 'search'])->name('buscar');
 
 
+//ROTAS DE CADASTRO
 Route::get('/cadastrar', [UsuariosController::class, 'create'])->name('usuarios.inserir');
 Route::post('/cadastrar', [UsuariosController::class, 'insert'])->name('usuarios.gravar');
 
 
+//ROTAS DE LOGIN
 Route::get('/login', [UsuariosController::class, 'login'])->name('login');
 Route::post('/login', [UsuariosController::class, 'login']);
 
 Route::get('/logout', [UsuariosController::class, 'logout'])->name('logout');
 
 
+//ROTAS DE ESTABELECIMENTOS
 Route::prefix('/estabelecimentos')->group(function() {
 
     Route::get('/', [EstabelecimentosController::class, 'index'])
@@ -63,10 +66,16 @@ Route::delete('/estabelecimento/{estabelecimento}/apagar', [EstabelecimentosCont
     ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.delete');
 
 
+//ROTAS DE CARDAPIOS
 Route::get('/{id_estabelecimento}/cardapio/inserir', [CardapiosController::class, 'create'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.inserir');
 Route::post('/cardapio/inserir', [CardapiosController::class, 'insert'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.gravar');
+
+Route::get('/cardapio/editar', [CardapiosController::class, 'edit'])
+    ->middleware(['auth', 'can:empresa'])->name('cardapios.edit');
+Route::put('/cardapio/{cardapio}/editar', [CardapiosController::class, 'update'])
+    ->middleware(['auth', 'can:empresa'])->name('cardapios.update');
 
 Route::get('/cardapio/apagar', [CardapiosController::class, 'remove'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.remove');
@@ -74,6 +83,7 @@ Route::delete('/cardapio/{cardapio}/apagar', [CardapiosController::class, 'delet
     ->middleware(['auth', 'can:empresa'])->name('cardapios.delete');
 
 
+//ROTAS DE PRODUTOS
 Route::get('/produto/inserir', [ProdutosController::class, 'create'])
     ->middleware(['auth', 'can:empresa'])->name('produtos.inserir');
 Route::post('/produto/inserir', [ProdutosController::class, 'insert'])
@@ -85,6 +95,7 @@ Route::delete('/produto/{produto}/apagar', [ProdutosController::class, 'delete']
     ->middleware(['auth', 'can:empresa'])->name('produtos.delete');
 
 
+//ROTAS DE NOTAS
 Route::get('/{id_estabelecimento}/nota/inserir', [NotasController::class, 'create'])
     ->middleware(['auth', 'can:cliente'])->name('notas.inserir');
 Route::post('/nota/inserir', [notasController::class, 'insert'])

@@ -144,28 +144,33 @@
                 $red_produtos = hexdec(substr($cor_produtos,0,2));
   		        $green_produtos = hexdec(substr($cor_produtos,2,2));
   		        $blue_produtos = hexdec(substr($cor_produtos,4,2));
+                $cor_produtos_sec = str_replace("#", "", $cardapio->cor_produtos_secundaria);
+                $red_produtos_sec = hexdec(substr($cor_produtos_sec,0,2));
+  		        $green_produtos_sec = hexdec(substr($cor_produtos_sec,2,2));
+  		        $blue_produtos_sec = hexdec(substr($cor_produtos_sec,4,2));
             @endphp
 
             @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario || $cardapio->visivel)
             <div class="row">
                 <div class="col">
-                    <div class="p-3 mb-3 rounded d-flex shadow-lg cardapio-titulo-div"
+                    <div class="mb-3 rounded d-flex shadow-lg cardapio-titulo-div"
                         style="--red: {{ $red_tema }}; --green: {{ $green_tema }}; --blue: {{ $blue_tema }};">
                         @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario && $cardapio->visivel)
-                        <div class="d-flex align-items-center ps-3 me-3">
+                        <div class="py-3 d-flex align-items-center px-3">
                             <span class="fs-4"><i class="bi bi-eye"></i></span>
                         </div>
                         @elseif(isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario && !$cardapio->visivel)
-                        <div class="d-flex align-items-center ps-3">
+                        <div class="py-3 d-flex align-items-center px-3">
                             <span class="fs-4"><i class="bi bi-eye-slash"></i></span>
                         </div>
                         @endif
-                        <div class="m-auto reticencias">
+                        <div class="py-3 m-auto reticencias">
                             <h2 class="h4 cardapio-titulo mb-0 reticencias">{{$cardapio->nome}}</h2>
                         </div>
                         @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
-                        <div class="d-flex align-items-center ps-3">
+                        <div class="py-3 d-flex align-items-center px-3 justify-content-end"  style="-webkit-box-shadow: inset -120px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -120px 0px 17px -5px rgb(0 0 0 / 10%);">
                             <button class="btn btn-success shadow-sm novo-produto me-2" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Adicionar produto"><i class="bi bi-clipboard-plus"></i></button>
+                            <button class="me-2 btn text-white editar-cardapio shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar cardápio"><i class="bi bi-pencil-square"></i></button>
                             <button class="btn btn-danger shadow-sm excluir-cardapio" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir cardápio"><i class="bi bi-clipboard-x"></i></button>
                         </div>
                         @endif
@@ -185,20 +190,23 @@
                 @foreach($cardapio->produtos as $produto)
 
                     <div class="col-md-6 card-col m-auto">
-                        <div class="card card_busca row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-preview"
+                        <div class="card card_busca row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
                             style=" --red: {{ $red_produtos }}; --green: {{ $green_produtos }}; --blue: {{ $blue_produtos }};">
-                            <div class="col p-4">
-                                <svg class="bd-placeholder-img card-img-background bg-light rounded shadow" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false"
-                                    @if ($produto->foto) style="background-image: url({{asset('img/' . $produto->foto)}})" @endif>
-                            @if (!$produto->foto)
-                            <title>Foto</title>
-                            <rect width="100%" height="100%" fill="#55595c"></rect>
-                            <text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Sem foto</text>
-                            @endif
+                            <div class="col p-4 d-flex">
+                                @if ($produto->foto)
+                                    <img src="{{asset('img/' . $produto->foto)}}" class="bd-placeholder-img card-img-background rounded mw-100 mh-100 my-auto">
+
+                                @else
+                                <svg class="bd-placeholder-img card-img-background rounded" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                    <title>Foto</title>
+                                    <rect width="100%" height="100%" fill="#55595c"></rect>
+                                    <text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Sem foto</text>
                                 </svg>
+                                @endif
                             </div>
-                            <div class="col p-4 d-flex flex-column position-static text-center">
-                                <h3 class="mb-2 card-estabelecimento-nome reticencias">{{ $produto->nome }}</h3>
+                            <div class="col p-4 d-flex flex-column position-static text-center card-produtos-textbox"
+                                style=" --red: {{ $red_produtos_sec }}; --green: {{ $green_produtos_sec }}; --blue: {{ $blue_produtos_sec }};">
+                                <h3 class="mb-2 card-estabelecimento-nome reticencias fw-bold">{{ $produto->nome }}</h3>
                                 <strong class="d-inline-block mb-2 reticencias">
                                     @if($produto->preco)
                                         @if($produto->preco == 0)Grátis
@@ -207,7 +215,9 @@
                                     @endif
                                 </strong>
                                 <p class="card-text mb-auto card-estabelecimento-descricao reticencias reticencias-descricao">{{ $produto->descricao }}</p>
-                                <button class="btn btn-danger shadow-sm excluir-produto mt-3 ms-auto" role="button" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir produto"><i class="bi bi-clipboard-minus"></i></button>
+                                <div class="d-flex mt-3 p-2 w-100 justify-content-end"  style="-webkit-box-shadow: inset -200px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -200px 0px 17px -5px rgb(0 0 0 / 10%);">
+                                    <button class="btn btn-danger shadow excluir-produto" role="button" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir produto"><i class="bi bi-clipboard-minus"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -330,6 +340,50 @@ $(document).ready(function(){
 
                     $.ajax({
                         url: action = $(this).attr('action'),
+                        method: $(this).attr('method'),
+                        data: new FormData(this),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        beforeSend: function() {
+                            $(document).find('.text-danger').text('');
+                            $(document).find('.border-danger').removeClass('is-invalid');
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function(err) {
+                            if (err.status == 422) {
+                                $.each(err.responseJSON.errors, function (i, error) {
+                                    $('.'+i+'_error').text(error[0]);
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
+                                });
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    });
+
+    $('.editar-cardapio').click(function() {
+   
+        var id_cardapio = $(this).data('id');
+        
+        $.ajax({
+            url: '{{ route("cardapios.edit") }}',
+            type: 'get',
+            data: {id: id_cardapio},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+
+                $('#editar-cardapio-form').on("submit", function(e){
+                    e.preventDefault();
+                    var action = $(this).attr('action');
+
+                    $.ajax({
+                        url: action,
                         method: $(this).attr('method'),
                         data: new FormData(this),
                         processData: false,

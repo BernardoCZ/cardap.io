@@ -40,7 +40,7 @@ class ProdutosController extends Controller
         $form->validate([
             'nome' => ['required', 'min:2', 'max:45'],
             'moeda' => ['nullable', 'in:R$,US$,€,£'],
-            'preco' => ['nullable', 'max:13', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'preco' => ['nullable', 'max:99999999999', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
             'descricao' => ['required', 'min:3', 'max: 200'],
             'foto' => ['nullable','image']
         ]);

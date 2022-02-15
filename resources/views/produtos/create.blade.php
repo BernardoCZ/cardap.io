@@ -68,15 +68,15 @@
                     <div class="row mb-2" data-masonry='{"percentPosition": true }'>
                         <div class="col-md-6 card-col m-auto">
                             <div class="card card_busca row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-preview" style=" --red: {{ $red }}; --green: {{ $green }}; --blue: {{ $blue }};">
-                                <div class="col p-4">
-                                    <svg class="bd-placeholder-img card-img-background bg-light rounded shadow" id="preview-produto-foto" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                <div class="col p-4 d-flex" id="preview-img-div">
+                                    <svg class="bd-placeholder-img card-img-background rounded" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false">
                                         <title>Foto</title>
                                         <rect width="100%" height="100%" fill="#55595c"></rect>
-                                        <text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Foto</text>
+                                        <text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Sem foto</text>
                                     </svg>
                                 </div>
                                 <div class="col p-4 d-flex flex-column position-static text-center">
-                                    <h3 class="mb-2 reticencias" id="preview-produto-nome">Nome do produto</h3>
+                                    <h3 class="mb-2 reticencias fw-bold" id="preview-produto-nome">Nome do produto</h3>
                                     <strong class="d-inline-block mb-2 reticencias" id="preview-produto-preco">R$ Preço</strong>
                                     <p class="card-text mb-auto reticencias reticencias-descricao" id="preview-produto-descricao">Descrição do produto...</p>
                                 </div>
