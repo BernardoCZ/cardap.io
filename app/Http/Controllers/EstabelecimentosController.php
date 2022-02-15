@@ -130,4 +130,44 @@ class EstabelecimentosController extends Controller
         
         return view('estabelecimentos.search', ['estabelecimentos' => $estabelecimentos, 'val' => $value, 'campo' => $campo, 'ordem' => $ordem]);
     }
+    public function remove()
+    {
+        $estabelecimento = Estabelecimento::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        return view('estabelecimentos.remove', ['estabelecimento' => $estabelecimento]);
+    }
+
+    public function delete(Estabelecimento $estabelecimento)
+    {
+        try {
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $estabelecimento->id)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_estabelecimento' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+        $cardapios = Cardapio::orderBy('id', 'asc')->where('id_estabelecimento', $estabelecimento->id)->get();
+        foreach ($cardapios as $cardapio) {
+            $produtos = Produto::orderBy('id', 'asc')->where('id_cardapio', $cardapio->id)->get();
+            foreach ($produtos as $produto) {
+                if ($produto->foto) {
+                    $image_path = public_path().'/img/'.$produto->foto;
+                    unlink($image_path);
+                }
+            }
+            Produto::where('id_cardapio', $cardapio->id)->delete();
+        }
+        Cardapio::where('id_estabelecimento', $estabelecimento->id)->delete();
+        if ($estabelecimento->logo) {
+            $image_path = public_path().'/img/'.$estabelecimento->logo;
+            unlink($image_path);
+        }
+        Nota::where('id_estabelecimento', $estabelecimento->id)->delete();
+        $estabelecimento->delete();
+        return redirect()->route('estabelecimentos');
+    }
 }

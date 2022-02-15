@@ -47,6 +47,11 @@ Route::prefix('/estabelecimentos')->group(function() {
 
 });
 
+Route::get('/estabelecimento/apagar', [EstabelecimentosController::class, 'remove'])
+    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.remove');
+Route::delete('/estabelecimentoo/{estabelecimento}/apagar', [EstabelecimentosController::class, 'delete'])
+    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.delete');
+
 
 Route::get('/{id_estabelecimento}/cardapio/inserir', [CardapiosController::class, 'create'])
     ->middleware(['auth', 'can:empresa'])->name('cardapios.inserir');

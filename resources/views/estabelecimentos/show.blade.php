@@ -207,7 +207,7 @@
                                     @endif
                                 </strong>
                                 <p class="card-text mb-auto card-estabelecimento-descricao reticencias reticencias-descricao">{{ $produto->descricao }}</p>
-                                <button class="btn btn-danger shadow-sm excluir-produto mt-3 m-auto" role="button" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir produto"><i class="bi bi-clipboard-minus"></i></button>
+                                <button class="btn btn-danger shadow-sm excluir-produto mt-3 ms-auto" role="button" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir produto"><i class="bi bi-clipboard-minus"></i></button>
                             </div>
                         </div>
                     </div>

@@ -61,17 +61,7 @@
                     <div class="col p-4 d-flex flex-column position-static text-center">
                         <strong class="d-inline-block mb-2 reticencias card-estabelecimento-tipo">{{ $estabelecimento->tipo }}</strong>
                         <h3 class="mb-0 reticencias card-estabelecimento-nome">{{ $estabelecimento->nome }}</h3>
-                        <div class="mb-1" style="visibility:hidden">
-                            <span class="valor_notas">--</span>
-                            <span class="notas" style="background: linear-gradient(to right, orange 0%, #f8f9fa 0); -webkit-background-clip: text;">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                            </span>
-                        </div>
-                        <p class="card-text mb-auto reticencias reticencias-descricao card-estabelecimento-descricao">{{ $estabelecimento->descricao }}</p>
+                        <p class="mt-3 card-text mb-auto reticencias reticencias-descricao card-estabelecimento-descricao">{{ $estabelecimento->descricao }}</p>
                         <a href="{{ route('estabelecimentos.show', $estabelecimento) }}" class="stretched-link hidden"></a>
                     </div>
                 </div>
