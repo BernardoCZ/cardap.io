@@ -47,9 +47,19 @@ Route::prefix('/estabelecimentos')->group(function() {
 
 });
 
+Route::get('/estabelecimento/editar', [EstabelecimentosController::class, 'edit'])
+    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.edit');
+Route::put('/estabelecimento/{estabelecimento}/editar', [EstabelecimentosController::class, 'update'])
+    ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.update');
+
+Route::get('/estabelecimento/editar/logo', [EstabelecimentosController::class, 'editLogo'])
+    ->middleware(['auth', 'can:empresa'])->name('logo.edit');
+Route::put('/estabelecimento/{estabelecimento}/editar/logo', [EstabelecimentosController::class, 'updateLogo'])
+    ->middleware(['auth', 'can:empresa'])->name('logo.update');
+
 Route::get('/estabelecimento/apagar', [EstabelecimentosController::class, 'remove'])
     ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.remove');
-Route::delete('/estabelecimentoo/{estabelecimento}/apagar', [EstabelecimentosController::class, 'delete'])
+Route::delete('/estabelecimento/{estabelecimento}/apagar', [EstabelecimentosController::class, 'delete'])
     ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.delete');
 
 

@@ -47,9 +47,11 @@
                         <strong class="d-inline-block mb-2 reticencias card-estabelecimento-tipo">{{ $estabelecimento->tipo }}</strong>
                         <h3 class="mb-0 reticencias card-estabelecimento-nome">{{ $estabelecimento->nome }}</h3>
                         <p class="mt-3 card-text mb-auto reticencias reticencias-descricao card-estabelecimento-descricao">{{ $estabelecimento->descricao }}</p>
-                        <div class="mt-3 pt-2 ms-auto">
-                            <a class="me-2 btn btn-success shadow-sm" style="font-weight: 500; width: fit-content;" href="{{ route('estabelecimentos.show', $estabelecimento) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Acessar estabelecimento"><i class="bi bi-box-arrow-up-right"></i></a>
-                            <button class="btn btn-danger excluir-estabelecimento shadow-sm" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir estabelecimento"><i class="bi bi-x-lg"></i></button>
+                        <div class="d-flex mt-3 p-2 w-100 justify-content-end"  style="-webkit-box-shadow: inset -200px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -200px 0px 17px -5px rgb(0 0 0 / 10%);">
+                            <a class="me-2 btn btn-success shadow" style="font-weight: 500; width: fit-content;" href="{{ route('estabelecimentos.show', $estabelecimento) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Acessar estabelecimento"><i class="bi bi-box-arrow-up-right"></i></a>
+                            <button class="me-2 btn btn-primary text-white editar-logo shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar logo"><i class="bi bi-camera"></i></button>
+                            <button class="me-2 btn text-white editar-estabelecimento shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar estabelecimento"><i class="bi bi-pencil-square"></i></button>
+                            <button class=" btn btn-danger excluir-estabelecimento shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir estabelecimento"><i class="bi bi-x-lg"></i></button>
                         </div>
                     </div>
                 </div>
@@ -77,6 +79,94 @@ $(document).ready(function(){
                 $('#form-modal').modal('show');
 
                 $('#criar-estabelecimento-form').on("submit", function(e){
+                    e.preventDefault();
+                    var action = $(this).attr('action');
+
+                    $.ajax({
+                        url: action,
+                        method: $(this).attr('method'),
+                        data: new FormData(this),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        beforeSend: function() {
+                            $(document).find('.text-danger').text('');
+                            $(document).find('.border-danger').removeClass('is-invalid');
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function(err) {
+                            if (err.status == 422) {
+                                $.each(err.responseJSON.errors, function (i, error) {
+                                    $('.'+i+'_error').text(error[0]);
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
+                                });
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    });
+
+    $('.editar-estabelecimento').click(function() {
+   
+        var id_estabelecimento = $(this).data('id');
+        
+        $.ajax({
+            url: '{{ route("estabelecimentos.edit") }}',
+            type: 'get',
+            data: {id: id_estabelecimento},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+
+                $('#editar-estabelecimento-form').on("submit", function(e){
+                    e.preventDefault();
+                    var action = $(this).attr('action');
+
+                    $.ajax({
+                        url: action,
+                        method: $(this).attr('method'),
+                        data: new FormData(this),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        beforeSend: function() {
+                            $(document).find('.text-danger').text('');
+                            $(document).find('.border-danger').removeClass('is-invalid');
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function(err) {
+                            if (err.status == 422) {
+                                $.each(err.responseJSON.errors, function (i, error) {
+                                    $('.'+i+'_error').text(error[0]);
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
+                                });
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    });
+
+    $('.editar-logo').click(function() {
+   
+        var id_estabelecimento = $(this).data('id');
+        
+        $.ajax({
+            url: '{{ route("logo.edit") }}',
+            type: 'get',
+            data: {id: id_estabelecimento},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+
+                $('#editar-logo-form').on("submit", function(e){
                     e.preventDefault();
                     var action = $(this).attr('action');
 

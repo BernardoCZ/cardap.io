@@ -15,7 +15,7 @@ class CardapiosController extends Controller
 {
     public function create($id_estabelecimento)
     {
-        return view('cardapios.create', ['id_estabelecimento' => $id_estabelecimento]);
+        return view('cardapios.create', ['id_estabelecimento' => $id_estabelecimento, 'cor_tema' => $_GET['cor_tema']]);
     }
 
     public function insert(Request $form)

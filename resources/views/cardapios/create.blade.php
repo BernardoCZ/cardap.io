@@ -1,3 +1,9 @@
+@php
+    $cor_fundo = str_replace("#", "", $cor_tema);
+    $red = hexdec(substr($cor_fundo,0,2));
+    $green = hexdec(substr($cor_fundo,2,2));
+    $blue = hexdec(substr($cor_fundo,4,2));
+@endphp
 <div class="modal-content">
 
         <div class="modal-header bg-tomato text-white">
@@ -23,14 +29,14 @@
                     <div class="col mb-3 d-flex" style="min-width: 250px">
                         <div class="d-flex m-auto align-items-center">
                             <label for="cor_tema" class="form-label mb-0 me-3">Cor tema</label>
-                            <input type="color" class="form-control form-control-color" id="cor_tema" name="cor_tema" title="Escolha uma cor" value="#ffffff" onchange="changeCardapioColor('#cor_tema')">
+                            <input type="color" class="form-control form-control-color" id="cor_tema" name="cor_tema" title="Escolha uma cor" value="{{ $cor_tema }}" onchange="changeCardapioColor('#cor_tema')">
                             <div class="form-text text-end me-1 text-danger cor_tema_error"></div>
                         </div>
                     </div>
                     <div class="col mb-3 d-flex" style="min-width: 250px">
                         <div class="d-flex m-auto align-items-center">
                             <label for="cor_produtos" class="form-label mb-0 me-3">Cor dos produtos</label>
-                            <input type="color" class="form-control form-control-color" id="cor_produtos" name="cor_produtos" title="Escolha uma cor" value="#ffffff" onchange="changeCardColor('#cor_produtos')">
+                            <input type="color" class="form-control form-control-color" id="cor_produtos" name="cor_produtos" title="Escolha uma cor" value="{{ $cor_tema }}" onchange="changeCardColor('#cor_produtos')">
                             <div class="form-text text-end me-1 text-danger cor_produtos_error"></div>
                         </div>
                     </div>
@@ -46,7 +52,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col">
-                            <div class="p-3 mb-3 rounded d-flex shadow cardapio-titulo-div" id="preview-cardapio-titulo-div">
+                            <div class="p-3 mb-3 rounded d-flex shadow cardapio-titulo-div" id="preview-cardapio-titulo-div" style="--red: {{ $red }}; --green: {{ $green }}; --blue: {{ $blue }};">
                                 <div class="m-auto reticencias">
                                     <h2 class="h4 cardapio-titulo mb-0 reticencias" id="preview-cardapio-titulo">Nome do cardápio</h2>
                                 </div>
@@ -56,7 +62,8 @@
 
                     <div class="row mb-2" data-masonry='{"percentPosition": true }'>
                         <div class="col-md-6 card-col m-auto">
-                            <div class="card card_busca row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-preview">
+                            <div class="card card_busca row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-preview"
+                                style="--red: {{ $red }}; --green: {{ $green }}; --blue: {{ $blue }};">
                                 <div class="col p-4">
                                     <svg class="bd-placeholder-img card-img-background" id="preview-estabelecimento-logo" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false">
                                         <title>Foto</title>

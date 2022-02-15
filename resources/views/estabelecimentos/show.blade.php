@@ -98,7 +98,7 @@
             <div class="row">
                 <div class="col d-flex"> 
                     <div class="m-auto fs-1">
-                        <span style="color: orange;">@if($nota_total || $nota_total == 0){{ $nota_total }}@else--@endif</span>
+                        <span style="color: orange;">@if($nota_total || $nota_total === 0){{ $nota_total }}@else--@endif</span>
                         <span class="notas" style="background: linear-gradient(to right, orange 
                         @if(isset($nota_total_estrelas)){{ $nota_total_estrelas.'%' }}@else{{'0%'}}@endif, #b7bdc3 0); -webkit-background-clip: text;">
                             <i class="bi bi-star-fill"></i>
@@ -123,7 +123,7 @@
                     <h3 class="h4 mb-0 lh-1">Cardápios</h6>
                 </div>
                 <div class="d-flex align-items-center p-3">
-                    <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-cardapio" data-bs-toggle="tooltip" data-bs-placement="top" title="Criar cardápio"><i class="bi bi-plus-lg"></i> Novo</button>
+                    <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-cardapio" data-cor="{{ $estabelecimento->cor_tema }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Criar cardápio"><i class="bi bi-plus-lg"></i> Novo</button>
                 </div>
             </div>
         </div>
@@ -231,10 +231,13 @@
 $(document).ready(function(){
 
     $('#novo-cardapio').click(function() {
+
+        var cor = $(this).data('cor');
    
         $.ajax({
             url: '{{ route("cardapios.inserir", $estabelecimento->id) }}',
             type: 'get',
+            data: {cor_tema: cor},
             success: function(response){
                 $('.modal-dialog').html(response);
                 $('#form-modal').modal('show');
