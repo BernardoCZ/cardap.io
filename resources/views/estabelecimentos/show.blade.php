@@ -168,7 +168,7 @@
                             <h2 class="h4 cardapio-titulo mb-0 reticencias">{{$cardapio->nome}}</h2>
                         </div>
                         @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
-                        <div class="py-3 d-flex align-items-center px-3 justify-content-end"  style="-webkit-box-shadow: inset -120px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -120px 0px 17px -5px rgb(0 0 0 / 10%);">
+                        <div class="py-3 d-flex align-items-center px-3 justify-content-end rounded"  style="-webkit-box-shadow: inset -120px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -120px 0px 17px -5px rgb(0 0 0 / 10%);">
                             <button class="btn btn-success shadow-sm novo-produto me-2" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Adicionar produto"><i class="bi bi-clipboard-plus"></i></button>
                             <button class="me-2 btn text-white editar-cardapio shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar cardápio"><i class="bi bi-pencil-square"></i></button>
                             <button class="btn btn-danger shadow-sm excluir-cardapio" role="button" style="font-weight: 500" data-id="{{ $cardapio->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir cardápio"><i class="bi bi-clipboard-x"></i></button>
@@ -215,9 +215,13 @@
                                     @endif
                                 </strong>
                                 <p class="card-text mb-auto card-estabelecimento-descricao reticencias reticencias-descricao">{{ $produto->descricao }}</p>
-                                <div class="d-flex mt-3 p-2 w-100 justify-content-end"  style="-webkit-box-shadow: inset -200px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -200px 0px 17px -5px rgb(0 0 0 / 10%);">
+                                @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
+                                <div class="d-flex mt-3 p-2 w-100 justify-content-end rounded"  style="-webkit-box-shadow: inset -200px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -200px 0px 17px -5px rgb(0 0 0 / 10%);">
+                                    <button class="me-2 btn btn-primary text-white editar-foto shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar foto"><i class="bi bi-camera"></i></button>
+                                    <button class="me-2 btn text-white editar-produto shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar produto"><i class="bi bi-pencil-square"></i></button>
                                     <button class="btn btn-danger shadow excluir-produto" role="button" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir produto"><i class="bi bi-clipboard-minus"></i></button>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -379,6 +383,94 @@ $(document).ready(function(){
                 $('#form-modal').modal('show');
 
                 $('#editar-cardapio-form').on("submit", function(e){
+                    e.preventDefault();
+                    var action = $(this).attr('action');
+
+                    $.ajax({
+                        url: action,
+                        method: $(this).attr('method'),
+                        data: new FormData(this),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        beforeSend: function() {
+                            $(document).find('.text-danger').text('');
+                            $(document).find('.border-danger').removeClass('is-invalid');
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function(err) {
+                            if (err.status == 422) {
+                                $.each(err.responseJSON.errors, function (i, error) {
+                                    $('.'+i+'_error').text(error[0]);
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
+                                });
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    });
+
+    $('.editar-produto').click(function() {
+   
+        var id_produto = $(this).data('id');
+        
+        $.ajax({
+            url: '{{ route("produtos.edit") }}',
+            type: 'get',
+            data: {id: id_produto},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+
+                $('#editar-produto-form').on("submit", function(e){
+                    e.preventDefault();
+                    var action = $(this).attr('action');
+
+                    $.ajax({
+                        url: action,
+                        method: $(this).attr('method'),
+                        data: new FormData(this),
+                        processData: false,
+                        dataType: 'json',
+                        contentType: false,
+                        beforeSend: function() {
+                            $(document).find('.text-danger').text('');
+                            $(document).find('.border-danger').removeClass('is-invalid');
+                        },
+                        success: function() {
+                            location.reload();
+                        },
+                        error: function(err) {
+                            if (err.status == 422) {
+                                $.each(err.responseJSON.errors, function (i, error) {
+                                    $('.'+i+'_error').text(error[0]);
+                                    $(document).find('[name="'+i+'"]').addClass('is-invalid');
+                                });
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    });
+
+    $('.editar-foto').click(function() {
+   
+        var id_produto = $(this).data('id');
+        
+        $.ajax({
+            url: '{{ route("foto.edit") }}',
+            type: 'get',
+            data: {id: id_produto},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
+
+                $('#editar-foto-form').on("submit", function(e){
                     e.preventDefault();
                     var action = $(this).attr('action');
 

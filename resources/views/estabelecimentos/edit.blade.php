@@ -135,7 +135,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-2" data-masonry='{"percentPosition": true }'>
+                <div class="row mb-3 px-3" data-masonry='{"percentPosition": true }'>
                     <div class="col-md-6 card-col m-auto">
                         <div class="card card_busca row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-preview"
                             style="--red: {{ $red }}; --green: {{ $green }}; --blue: {{ $blue }};">

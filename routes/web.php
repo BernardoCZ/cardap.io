@@ -89,6 +89,16 @@ Route::get('/produto/inserir', [ProdutosController::class, 'create'])
 Route::post('/produto/inserir', [ProdutosController::class, 'insert'])
     ->middleware(['auth', 'can:empresa'])->name('produtos.gravar');
 
+Route::get('/produto/editar', [ProdutosController::class, 'edit'])
+    ->middleware(['auth', 'can:empresa'])->name('produtos.edit');
+Route::put('/produto/{produto}/editar', [ProdutosController::class, 'update'])
+    ->middleware(['auth', 'can:empresa'])->name('produtos.update');
+
+Route::get('/produto/editar/foto', [ProdutosController::class, 'editFoto'])
+    ->middleware(['auth', 'can:empresa'])->name('foto.edit');
+Route::put('/produto/{produto}/editar/foto', [ProdutosController::class, 'updateFoto'])
+    ->middleware(['auth', 'can:empresa'])->name('foto.update');
+
 Route::get('/produto/apagar', [ProdutosController::class, 'remove'])
     ->middleware(['auth', 'can:empresa'])->name('produtos.remove');
 Route::delete('/produto/{produto}/apagar', [ProdutosController::class, 'delete'])

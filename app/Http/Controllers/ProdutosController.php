@@ -17,8 +17,8 @@ class ProdutosController extends Controller
     public function create()
     {
         $id_cardapio = $_GET['id'];
-        $cor = Cardapio::orderBy('id', 'asc')->where('id', $id_cardapio)->value('cor_produtos');
-        return view('produtos.create', ['id_cardapio' => $id_cardapio, 'cor' => $cor]);
+        $cardapio = Cardapio::orderBy('id', 'asc')->where('id', $id_cardapio)->first();
+        return view('produtos.create', ['cardapio' => $cardapio]);
     }
 
     public function insert(Request $form)
@@ -92,5 +92,90 @@ class ProdutosController extends Controller
         }
         $produto->delete();
         return redirect()->route('estabelecimentos.show', $id_estabelecimento);
+    }
+
+    public function edit()
+    {
+        $produto = Produto::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        $cardapio = Cardapio::orderBy('id', 'asc')->where('id', $produto->id_cardapio)->first();
+        return view('produtos.edit', ['produto' => $produto, 'cardapio' => $cardapio]);
+    }
+
+    public function update(Request $form, Produto $produto)
+    {
+
+        try {
+            $id_estabelecimento = Cardapio::orderBy('id', 'asc')->where('id', $produto->id_cardapio)->value('id_estabelecimento');
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $id_estabelecimento)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_produto' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+
+        $form->validate([
+            'nome' => ['required', 'min:2', 'max:45'],
+            'moeda' => ['nullable', 'in:R$,US$,€,£'],
+            'preco' => ['nullable', 'max:99999999999', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'descricao' => ['required', 'min:3', 'max: 200']
+        ]);
+
+        $produto->nome = $form->nome;
+        $produto->moeda = $form->moeda;
+        $produto->preco = $form->preco;
+        $produto->descricao = $form->descricao;
+
+        $produto->save();
+
+        return true;
+    }
+
+    public function editFoto()
+    {
+        $produto = Produto::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        $cardapio = Cardapio::orderBy('id', 'asc')->where('id', $produto->id_cardapio)->first();
+        return view('produtos.editFoto', ['produto' => $produto, 'cardapio' => $cardapio]);
+    }
+
+    public function updateFoto(Request $form, Produto $produto)
+    {
+
+        try {
+            $id_estabelecimento = Cardapio::orderBy('id', 'asc')->where('id', $produto->id_cardapio)->value('id_estabelecimento');
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $id_estabelecimento)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_produto' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+
+        $form->validate([
+            'foto' => ['nullable','image']
+        ]);
+
+        if ($produto->foto) {
+            $image_path = public_path().'/img/'.$produto->foto;
+            unlink($image_path);
+        }
+        $imgPath = null;
+        if($form->file('foto')){
+            $imgPath = $form->file('foto')->store('', 'imagens');
+        }
+
+        $produto->foto = $imgPath;
+
+        $produto->save();
+
+        return true;
     }
 }
