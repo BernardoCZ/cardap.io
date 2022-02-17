@@ -36,6 +36,19 @@ Route::post('/login', [UsuariosController::class, 'login']);
 Route::get('/logout', [UsuariosController::class, 'logout'])->name('logout');
 
 
+//ROTAS DE PERFIL
+Route::get('/perfil', [UsuariosController::class, 'profile'])->middleware('auth')->name('perfil');
+
+Route::get('/perfil/edit', [UsuariosController::class, 'edit'])->middleware('auth')->name('perfil.edit');
+Route::put('/perfil/edit', [UsuariosController::class, 'update'])->middleware('auth')->name('perfil.update');
+
+Route::get('/perfil/password', [UsuariosController::class, 'alterar_senha'])->middleware('auth')->name('senha.edit');
+Route::put ('/perfil/password', [UsuariosController::class, 'update_senha'])->middleware('auth')->name('senha.update');
+
+Route::get('/perfil/imagem', [UsuariosController::class, 'editImagem'])->middleware('auth')->name('imagem.edit');
+Route::put('/perfil/imagem', [UsuariosController::class, 'updateImagem'])->middleware('auth')->name('imagem.update');
+
+
 //ROTAS DE ESTABELECIMENTOS
 Route::prefix('/estabelecimentos')->group(function() {
 

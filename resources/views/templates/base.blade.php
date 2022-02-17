@@ -29,11 +29,11 @@
         <div class="text-end">          
             @if (Auth::user())
             <div class="flex-shrink-0 dropdown">
-              <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle text-white" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif" alt="Usuário" height="32" class="rounded-circle">
+              <a href="{{ route('perfil') }}" class="d-flex link-dark text-decoration-none dropdown-toggle text-white justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="bg-light card-img-background rounded-circle d-inline-block" style="background-image: url('@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif'); height: 35px; width: 35px; min-width: unset; background-size: cover;" alt="Usuário"></div>
               </a>
               <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                <li><a class="dropdown-item" href="#"><i class="bi bi-person-square"></i><span>{{ Auth::user()->username }}</span></a></li>
+                <li><a class="dropdown-item" href="{{ route('perfil') }}"><i class="bi bi-person-square"></i><span>{{ Auth::user()->username }}</span></a></li>
                 @can ('empresa')
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="{{ route('estabelecimentos') }}"><i class="bi bi-shop-window"></i><span>Meus estabelecimentos</span></a></li>

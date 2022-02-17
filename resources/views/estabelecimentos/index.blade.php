@@ -4,7 +4,7 @@
 @section('content')
 <div class="d-flex rounded shadow-sm bg-tomato text-white my-3">
     <div class="d-flex align-items-center p-3" style="margin-right: auto;">
-        <img src="@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif" alt="Usuário" height="32" class="rounded-circle me-3">
+        <div class="me-2 bg-light card-img-background rounded-circle d-inline-block" style="background-image: url('@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif'); height: 35px; width: 35px; min-width: unset; background-size: cover;" alt="Usuário"></div>
         <div class="lh-1">
             <h6 class="h6 mb-0 lh-1">{{ Auth::User()->username }}</h6>
             <small>{{ ucfirst(Auth::User()->type) }}</small>
