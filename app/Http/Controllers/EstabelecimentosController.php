@@ -280,11 +280,22 @@ class EstabelecimentosController extends Controller
 
     public function cut(Request $form, Estabelecimento $estabelecimento)
     {
-            
-            $img64 = explode(",", $form->img);
-            $img64 = base64_decode($img64[1]);
-            Storage::disk('imagens')->put($estabelecimento->logo, $img64);
+        try {
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $estabelecimento->id)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_usuario' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+        $img64 = explode(",", $form->img);
+        $img64 = base64_decode($img64[1]);
+        Storage::disk('imagens')->put($estabelecimento->logo, $img64);
 
-            return redirect()->route('estabelecimentos');
+        return redirect()->route('estabelecimentos');
     }
 }

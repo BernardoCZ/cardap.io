@@ -75,7 +75,7 @@ Route::put('/estabelecimento/{estabelecimento}/editar/logo', [EstabelecimentosCo
 
 Route::get('/estabelecimento/cortar/logo', [EstabelecimentosController::class, 'crop'])
     ->middleware(['auth', 'can:empresa'])->name('logo.crop');
-Route::put('/estabelecimento/{estabelecimento}/cortar/logo', [EstabelecimentosController::class, 'cut'])
+Route::post('/estabelecimento/{estabelecimento}/cortar/logo', [EstabelecimentosController::class, 'cut'])
     ->middleware(['auth', 'can:empresa'])->name('logo.cut');
 
 Route::get('/estabelecimento/apagar', [EstabelecimentosController::class, 'remove'])
@@ -116,6 +116,11 @@ Route::get('/produto/editar/foto', [ProdutosController::class, 'editFoto'])
     ->middleware(['auth', 'can:empresa'])->name('foto.edit');
 Route::put('/produto/{produto}/editar/foto', [ProdutosController::class, 'updateFoto'])
     ->middleware(['auth', 'can:empresa'])->name('foto.update');
+
+Route::get('/produto/cortar/foto', [ProdutosController::class, 'crop'])
+    ->middleware(['auth', 'can:empresa'])->name('foto.crop');
+Route::post('/produto/{produto}/cortar/foto', [ProdutosController::class, 'cut'])
+    ->middleware(['auth', 'can:empresa'])->name('foto.cut');
 
 Route::get('/produto/apagar', [ProdutosController::class, 'remove'])
     ->middleware(['auth', 'can:empresa'])->name('produtos.remove');

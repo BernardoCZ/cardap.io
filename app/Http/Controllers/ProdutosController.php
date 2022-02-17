@@ -178,4 +178,33 @@ class ProdutosController extends Controller
 
         return true;
     }
+
+    public function crop()
+    {
+        $produto = Produto::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        return view('produtos.crop', ['produto' => $produto]);
+    }
+
+    public function cut(Request $form, Produto $produto)
+    {
+        try {
+            $id_estabelecimento = Cardapio::orderBy('id', 'asc')->where('id', $produto->id_cardapio)->value('id_estabelecimento');
+            $id_usuario = Estabelecimento::orderBy('id', 'asc')->where('id', $id_estabelecimento)->value('id_usuario');
+            if ($id_usuario != FacadesAuth::user()->id) {
+                throw new Exception();
+            }
+        }
+        catch (Exception $exception) {
+            return response()->json([
+                'status' => 422,
+                'errors' => ['id_usuario' => ['Ação inautorizada para o usuário atual.']]
+            ], 422);
+        }
+        
+        $img64 = explode(",", $form->img);
+        $img64 = base64_decode($img64[1]);
+        Storage::disk('imagens')->put($produto->foto, $img64);
+
+        return redirect()->route('estabelecimentos.show', $id_estabelecimento);
+    }
 }
