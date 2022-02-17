@@ -48,6 +48,9 @@ Route::put ('/perfil/password', [UsuariosController::class, 'update_senha'])->mi
 Route::get('/perfil/imagem', [UsuariosController::class, 'editImagem'])->middleware('auth')->name('imagem.edit');
 Route::put('/perfil/imagem', [UsuariosController::class, 'updateImagem'])->middleware('auth')->name('imagem.update');
 
+Route::get('/perfil/imagem/cortar', [UsuariosController::class, 'crop'])->middleware('auth')->name('imagem.crop');
+Route::post('/perfil/imagem/cortar', [UsuariosController::class, 'cut'])->middleware('auth')->name('imagem.cut');
+
 
 //ROTAS DE ESTABELECIMENTOS
 Route::prefix('/estabelecimentos')->group(function() {

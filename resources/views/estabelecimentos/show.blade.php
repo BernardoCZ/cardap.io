@@ -218,7 +218,9 @@
                                 @if (isset(Auth::user()->id) && Auth::user()->id == $estabelecimento->id_usuario)
                                 <div class="d-flex mt-3 p-2 w-100 justify-content-end rounded"  style="-webkit-box-shadow: inset -200px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -200px 0px 17px -5px rgb(0 0 0 / 10%);">
                                     <button class="me-2 btn btn-primary text-white editar-foto shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar foto"><i class="bi bi-camera"></i></button>
-                                    <button class="me-2 btn btn-secondary text-white cortar-foto shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cortar foto"><i class="bi bi-crop"></i>
+                                    @if ($produto->foto != null)
+                                    <button class="me-2 btn btn-secondary text-white cortar-foto shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cortar foto"><i class="bi bi-crop"></i></button>
+                                    @endif
                                     <button class="me-2 btn text-white editar-produto shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar produto"><i class="bi bi-pencil-square"></i></button>
                                     <button class="btn btn-danger shadow excluir-produto" role="button" style="font-weight: 500; width: fit-content;" data-id="{{ $produto->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir produto"><i class="bi bi-clipboard-minus"></i></button>
                                 </div>

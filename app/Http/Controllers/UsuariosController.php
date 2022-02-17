@@ -192,4 +192,19 @@ class UsuariosController extends Controller
 
         return true;
     }
+
+    public function crop()
+    {
+        return view('usuarios.crop', ['usuario' => Auth::user()]);
+    }
+
+    public function cut(Request $form)
+    {
+        $usuario = Auth::user();
+        $img64 = explode(",", $form->img);
+        $img64 = base64_decode($img64[1]);
+        Storage::disk('imagens')->put($usuario->profile_image, $img64);
+
+        return redirect()->route('perfil');
+    }
 }

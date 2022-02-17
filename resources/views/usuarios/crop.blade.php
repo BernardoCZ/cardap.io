@@ -1,16 +1,16 @@
 <div class="modal-content">
 
         <div class="modal-header bg-tomato text-white">
-            <h5 class="modal-title">Cortar foto do produto</h5>
+            <h5 class="modal-title">Cortar imagem de perfil</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
-            <form method="post" action="{{ route('foto.cut', $produto) }}" enctype="multipart/form-data" id="cortar">
+            <form method="post" action="{{ route('imagem.cut') }}" enctype="multipart/form-data" id="cortar">
                 @csrf
 
                 <div class="mb-3" style="max-height: 50vh; min-height: 30vh">
-                    <img class="mw-100" id="img-crop" src="{{asset('img/' . $produto->foto)}}">
+                    <img class="mw-100" id="img-crop" src="{{asset('img/' . $usuario->profile_image)}}">
                 </div>
 
                 <div class="row visually-hidden">
@@ -21,7 +21,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success" id="cortar-foto-submit">Salvar foto</button>
+                    <button type="submit" class="btn btn-success" id="cortar-imagem-submit">Salvar imagem</button>
                 </div>
             </form>
         </div>

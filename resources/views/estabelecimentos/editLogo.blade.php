@@ -7,7 +7,7 @@
 <div class="modal-content">
 
         <div class="modal-header bg-tomato text-white">
-            <h5 class="modal-title">Editar logo</h5>
+            <h5 class="modal-title">Editar logo do estabelecimento</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 

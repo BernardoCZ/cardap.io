@@ -2,15 +2,15 @@
 @section('title', 'Estabelecimentos')
 
 @section('content')
-<div class="d-flex rounded shadow-sm bg-tomato text-white my-3">
-    <div class="d-flex align-items-center p-3" style="margin-right: auto;">
+<div class="d-flex rounded shadow-sm bg-tomato text-white my-3 flex-wrap">
+    <div class="d-flex align-items-center p-3 me-auto">
         <div class="me-2 bg-light card-img-background rounded-circle d-inline-block" style="background-image: url('@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif'); height: 35px; width: 35px; min-width: unset; background-size: cover;" alt="Usuário"></div>
         <div class="lh-1">
             <h6 class="h6 mb-0 lh-1">{{ Auth::User()->username }}</h6>
             <small>{{ ucfirst(Auth::User()->type) }}</small>
         </div>
     </div>
-    <div class="d-flex align-items-center p-3">
+    <div class="d-flex align-items-center p-3 ms-auto">
         <button class="btn btn-success" role="button" style="font-weight: 500" id="novo-estabelecimento" data-bs-toggle="tooltip" data-bs-placement="top" title="Criar estabelecimento"><i class="bi bi-plus-lg"></i> Novo</button>
     </div>
 </div>
@@ -50,7 +50,9 @@
                         <div class="d-flex mt-3 p-2 w-100 justify-content-end rounded"  style="-webkit-box-shadow: inset -200px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -200px 0px 17px -5px rgb(0 0 0 / 10%);">
                             <a class="me-2 btn btn-success shadow" style="font-weight: 500; width: fit-content;" href="{{ route('estabelecimentos.show', $estabelecimento) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Acessar estabelecimento"><i class="bi bi-box-arrow-up-right"></i></a>
                             <button class="me-2 btn btn-primary text-white editar-logo shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar logo"><i class="bi bi-camera"></i></button>
-                            <button class="me-2 btn btn-secondary text-white cortar-logo shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cortar logo"><i class="bi bi-crop"></i>
+                            @if ($estabelecimento->logo != null)
+                            <button class="me-2 btn btn-secondary text-white cortar-logo shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cortar logo"><i class="bi bi-crop"></i></button>
+                            @endif
                             <button class="me-2 btn text-white editar-estabelecimento shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar estabelecimento"><i class="bi bi-pencil-square"></i></button>
                             <button class="btn btn-danger excluir-estabelecimento shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir estabelecimento"><i class="bi bi-x-lg"></i></button>
                         </div>

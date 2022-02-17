@@ -2,16 +2,20 @@
 @section('title', 'Perfil')
 
 @section('content')
-<div class="d-flex rounded shadow-sm bg-tomato text-white my-3">
-    <div class="d-flex align-items-center p-3" style="margin-right: auto;">
-        <div class="me-2 bg-light card-img-background rounded-circle d-inline-block" style="background-image: url('@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif'); height: 35px; width: 35px; min-width: unset; background-size: cover;" alt="Usuário"></div>
+<div class="d-flex rounded shadow-sm bg-tomato text-white my-3 flex-wrap">
+    <div class="d-flex align-items-center p-3 me-auto">
+        <div class="me-2 bg-light card-img-background rounded-circle d-inline-block"
+            style="background-image: url('@if (Auth::user()->profile_image == null) {{asset('img/no_image_user.jpg')}} @else {{asset('img/' . Auth::user()->profile_image)}} @endif'); height: 35px; width: 35px; min-width: unset; background-size: cover;" alt="Usuário"></div>
         <div class="lh-1">
             <h3 class="h6 mb-0 lh-1">{{ Auth::User()->username }}</h3>
             <small>{{ ucfirst(Auth::User()->type) }}</small>
         </div>
     </div>
-    <div class="py-3 d-flex align-items-center px-3 justify-content-end rounded"  style="-webkit-box-shadow: inset -120px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -120px 0px 17px -5px rgb(0 0 0 / 10%);">
+    <div class="py-3 d-flex align-items-center px-3 justify-content-end rounded ms-auto"  style="-webkit-box-shadow: inset -120px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -120px 0px 17px -5px rgb(0 0 0 / 10%);">
         <button class="me-2 btn btn-primary text-white editar-imagem shadow" style="font-weight: 500; width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar imagem de perfil"><i class="bi bi-camera"></i></button>
+        @if (Auth::user()->profile_image != null)
+        <button class="me-2 btn btn-secondary text-white cortar-imagem shadow" style="font-weight: 500; width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="top" title="Cortar imagem de perfil"><i class="bi bi-crop"></i></button>
+        @endif
         <button class="me-2 btn text-white editar-perfil shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar informações de perfil"><i class="bi bi-pencil-square"></i></button>
         <button class="btn btn-secondary text-white editar-senha shadow" style="font-weight: 500; width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar senha"><i class="bi bi-key"></i></button>
     </div>
@@ -226,6 +230,18 @@ $(document).ready(function(){
                         }
                     });
                 })
+            }
+        });
+    });
+
+    $('.cortar-imagem').click(function() {
+
+        $.ajax({
+            url: '{{ route("imagem.crop") }}',
+            type: 'get',
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
             }
         });
     });
