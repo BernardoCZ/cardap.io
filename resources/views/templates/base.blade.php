@@ -82,7 +82,7 @@
         $('#form-buscar').on("submit", function(e){
             e.preventDefault();
             if ($('#buscar').val()) {
-              location.href = '{{ route('buscar') }}' + '?val=' + $('#buscar').val() + '&campo=nome&ordem=asc';
+              location.href = '{{ route('buscar') }}' + '?val=' + $('#buscar').val() + '&campo=' + $('#ordenar-campo').val() + '&ordem=' + $('input[name="ordenar-direcao"]:checked').val();
             }
         });
       });

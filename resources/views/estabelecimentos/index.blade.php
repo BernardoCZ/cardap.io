@@ -1,6 +1,10 @@
 @extends('templates.base')
 @section('title', 'Estabelecimentos')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" integrity="sha512-0SPWAwpC/17yYyZ/4HSllgaK7/gg9OlVozq8K7rf3J8LvCjYEEIfzzpnA2/SSjpGIunCSD18r3UhvDcu/xncWA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@endpush
+
 @section('content')
 <div class="d-flex rounded shadow-sm bg-tomato text-white my-3">
     <div class="d-flex align-items-center p-3" style="margin-right: auto;">
@@ -50,6 +54,7 @@
                         <div class="d-flex mt-3 p-2 w-100 justify-content-end rounded"  style="-webkit-box-shadow: inset -200px 0px 17px -5px rgb(0,0,0,0.10); box-shadow: inset -200px 0px 17px -5px rgb(0 0 0 / 10%);">
                             <a class="me-2 btn btn-success shadow" style="font-weight: 500; width: fit-content;" href="{{ route('estabelecimentos.show', $estabelecimento) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Acessar estabelecimento"><i class="bi bi-box-arrow-up-right"></i></a>
                             <button class="me-2 btn btn-primary text-white editar-logo shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar logo"><i class="bi bi-camera"></i></button>
+                            <button class="me-2 btn btn-secondary text-white cortar-logo shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Cortar logo"><i class="bi bi-crop"></i>
                             <button class="me-2 btn text-white editar-estabelecimento shadow" style="font-weight: 500; width: fit-content; background-color: #ff4d00" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar estabelecimento"><i class="bi bi-pencil-square"></i></button>
                             <button class="btn btn-danger excluir-estabelecimento shadow" style="font-weight: 500; width: fit-content;" data-id="{{ $estabelecimento->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir estabelecimento"><i class="bi bi-x-lg"></i></button>
                         </div>
@@ -66,6 +71,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 $(document).ready(function(){
 
@@ -194,6 +200,21 @@ $(document).ready(function(){
                         }
                     });
                 })
+            }
+        });
+    });
+
+    $('.cortar-logo').click(function() {
+        
+        var id_estabelecimento = $(this).data('id');
+
+        $.ajax({
+            url: '{{ route("logo.crop") }}',
+            type: 'get',
+            data: {id: id_estabelecimento},
+            success: function(response){
+                $('.modal-dialog').html(response);
+                $('#form-modal').modal('show');
             }
         });
     });

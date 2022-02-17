@@ -125,7 +125,7 @@ function changeFoto(event) {
     var preview = document.querySelector('#preview-img-div');
     if(event.target.files.length > 0 && event.target.files[0].type.includes('image')){
         var src = URL.createObjectURL(event.target.files[0]);
-        preview.innerHTML = '<img src="'+src+'" class="bd-placeholder-img card-img-background rounded mw-100 mh-100 my-auto">'
+        preview.innerHTML = '<img src="'+src+'" class="bd-placeholder-img card-img-background rounded mw-100 m-auto" style="max-height: 500px;">'
     }
     else{
         preview.innerHTML = '<svg class="bd-placeholder-img card-img-background rounded" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Foto</title><rect width="100%" height="100%" fill="#55595c"></rect><text id="svg-text" x="50%" y="50%" fill="#eceeef" dy=".3em">Sem foto</text></svg>';

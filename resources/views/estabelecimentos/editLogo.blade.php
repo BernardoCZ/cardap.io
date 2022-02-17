@@ -49,7 +49,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success" id="editar-estabelecimento-submit">Salvar logo</button>
+                    <button type="submit" class="btn btn-success" id="editar-logo-submit">Salvar logo</button>
                 </div>
             </form>
         </div>

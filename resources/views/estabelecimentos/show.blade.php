@@ -194,7 +194,7 @@
                             style=" --red: {{ $red_produtos }}; --green: {{ $green_produtos }}; --blue: {{ $blue_produtos }};">
                             <div class="col p-4 d-flex">
                                 @if ($produto->foto)
-                                    <img src="{{asset('img/' . $produto->foto)}}" class="bd-placeholder-img card-img-background rounded mw-100 mh-100 my-auto">
+                                    <img src="{{asset('img/' . $produto->foto)}}" class="bd-placeholder-img card-img-background rounded mw-100 m-auto" style="max-height: 500px;">
 
                                 @else
                                 <svg class="bd-placeholder-img card-img-background rounded" width="100%" height="100%" role="img" aria-label="Logo" preserveAspectRatio="xMidYMid slice" focusable="false">

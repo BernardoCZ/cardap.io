@@ -271,4 +271,20 @@ class EstabelecimentosController extends Controller
 
         return true;
     }
+
+    public function crop()
+    {
+        $estabelecimento = Estabelecimento::orderBy('id', 'asc')->where('id', $_GET['id'])->first();
+        return view('estabelecimentos.crop', ['estabelecimento' => $estabelecimento]);
+    }
+
+    public function cut(Request $form, Estabelecimento $estabelecimento)
+    {
+            
+            $img64 = explode(",", $form->img);
+            $img64 = base64_decode($img64[1]);
+            Storage::disk('imagens')->put($estabelecimento->logo, $img64);
+
+            return redirect()->route('estabelecimentos');
+    }
 }

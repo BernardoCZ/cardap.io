@@ -73,6 +73,11 @@ Route::get('/estabelecimento/editar/logo', [EstabelecimentosController::class, '
 Route::put('/estabelecimento/{estabelecimento}/editar/logo', [EstabelecimentosController::class, 'updateLogo'])
     ->middleware(['auth', 'can:empresa'])->name('logo.update');
 
+Route::get('/estabelecimento/cortar/logo', [EstabelecimentosController::class, 'crop'])
+    ->middleware(['auth', 'can:empresa'])->name('logo.crop');
+Route::put('/estabelecimento/{estabelecimento}/cortar/logo', [EstabelecimentosController::class, 'cut'])
+    ->middleware(['auth', 'can:empresa'])->name('logo.cut');
+
 Route::get('/estabelecimento/apagar', [EstabelecimentosController::class, 'remove'])
     ->middleware(['auth', 'can:empresa'])->name('estabelecimentos.remove');
 Route::delete('/estabelecimento/{estabelecimento}/apagar', [EstabelecimentosController::class, 'delete'])
